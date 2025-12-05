@@ -16,7 +16,7 @@ const Navbar = () => {
         <li> Home</li>
       </NavLink>
       <NavLink
-        to="/allProducts"
+        to="/meals"
         className="flex justify-center items-center gap-2 hover:shadow-xl/50 rounded-xl px-3 py-2"
       >
         <GiHotMeal />
@@ -74,10 +74,10 @@ const Navbar = () => {
             <LuLogIn />
           </Link>
           <Link
-            to="/signup"
+            to="/register"
             className="flex justify-center items-center gap-2 transition delay-150 ease-in-out hover:-translate-y-1 hover:scale-100 cursor-pointer font-bold"
           >
-            <button className="cursor-pointer">Sign Up</button>
+            <button className="cursor-pointer">Register</button>
             <SiGnuprivacyguard />
           </Link>
         </div>
