@@ -1,0 +1,89 @@
+import { Link, NavLink } from "react-router";
+import { IoHome } from "react-icons/io5";
+import { GiHotMeal } from "react-icons/gi";
+import { LuLogIn } from "react-icons/lu";
+import { SiGnuprivacyguard } from "react-icons/si";
+import logo from '../assets/logo.png'
+
+const Navbar = () => {
+  const menu = (
+    <>
+      <NavLink
+        to="/"
+        className="flex justify-center items-center gap-2 hover:shadow-xl/50 rounded-xl px-3 py-2"
+      >
+        <IoHome />
+        <li> Home</li>
+      </NavLink>
+      <NavLink
+        to="/allProducts"
+        className="flex justify-center items-center gap-2 hover:shadow-xl/50 rounded-xl px-3 py-2"
+      >
+        <GiHotMeal />
+        <li>Meals</li>
+      </NavLink>
+    </>
+  );
+  return (
+    <div className="w-7xl mx-auto navbar bg-base-100 mt-6 rounded-4xl shadow-xl/30 lg:px-6 mb-10">
+      <div className="navbar-start">
+        <div className="dropdown">
+          <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              {" "}
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M4 6h16M4 12h8m-8 6h16"
+              />{" "}
+            </svg>
+          </div>
+          <ul
+            tabIndex="-1"
+            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow space-y-5"
+          >
+            {menu}
+          </ul>
+        </div>
+        <div className="flex justify-center items-center gap-3">
+          <img src={logo} className="w-8 h-8" alt="" srcset="" />
+
+          <a className="text-xl font-bold">
+            <span className="text-orange-600">H</span>ome
+            <span className="text-orange-600">D</span>ish-<span className="text-orange-600">Hub</span>
+          </a>
+        </div>
+      </div>
+      <div className="navbar-center hidden lg:flex">
+        <ul className="menu menu-horizontal px-1 space-x-1">{menu}</ul>
+      </div>
+      <div className="navbar-end">
+        <div className="space-x-7 px-14 h-13 lg:flex justify-center items-center rounded-full hidden">
+          <Link
+            to="/login"
+            className="flex justify-center items-center gap-2 transition delay-150 ease-in-out hover:-translate-y-1 hover:scale-100 cursor-pointer font-bold"
+          >
+            <button className="cursor-pointer">Log In</button>
+            <LuLogIn />
+          </Link>
+          <Link
+            to="/signup"
+            className="flex justify-center items-center gap-2 transition delay-150 ease-in-out hover:-translate-y-1 hover:scale-100 cursor-pointer font-bold"
+          >
+            <button className="cursor-pointer">Sign Up</button>
+            <SiGnuprivacyguard />
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Navbar;
