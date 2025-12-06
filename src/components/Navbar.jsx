@@ -4,8 +4,11 @@ import { GiHotMeal } from "react-icons/gi";
 import { LuLogIn } from "react-icons/lu";
 import { SiGnuprivacyguard } from "react-icons/si";
 import logo from '../assets/logo.png'
+import { useContext } from "react";
+import { AuthContext } from "../providers/AuthProvider";
 
 const Navbar = () => {
+  const {user, loading, logOut} = useContext(AuthContext)
   const menu = (
     <>
       <NavLink
@@ -24,6 +27,9 @@ const Navbar = () => {
       </NavLink>
     </>
   );
+
+  console.log(user);
+  
   return (
     <div className="w-7xl mx-auto navbar bg-base-100 mt-6 rounded-4xl shadow-xl/30 lg:px-6 mb-10">
       <div className="navbar-start">
@@ -53,11 +59,12 @@ const Navbar = () => {
           </ul>
         </div>
         <div className="flex justify-center items-center gap-3">
-          <img src={logo} className="w-8 h-8" alt="" srcset="" />
+          <img src={logo} className="w-8 h-8" alt="" />
 
           <a className="text-xl font-bold">
             <span className="text-orange-600">H</span>ome
-            <span className="text-orange-600">D</span>ish-<span className="text-orange-600">Hub</span>
+            <span className="text-orange-600">D</span>ish-
+            <span className="text-orange-600">Hub</span>
           </a>
         </div>
       </div>
@@ -65,22 +72,54 @@ const Navbar = () => {
         <ul className="menu menu-horizontal px-1 space-x-1">{menu}</ul>
       </div>
       <div className="navbar-end">
-        <div className="space-x-7 px-14 h-13 lg:flex justify-center items-center rounded-full hidden">
-          <Link
-            to="/login"
-            className="flex justify-center items-center gap-2 transition delay-150 ease-in-out hover:-translate-y-1 hover:scale-100 cursor-pointer font-bold"
-          >
-            <button className="cursor-pointer">Log In</button>
-            <LuLogIn />
-          </Link>
-          <Link
-            to="/register"
-            className="flex justify-center items-center gap-2 transition delay-150 ease-in-out hover:-translate-y-1 hover:scale-100 cursor-pointer font-bold"
-          >
-            <button className="cursor-pointer">Register</button>
-            <SiGnuprivacyguard />
-          </Link>
-        </div>
+        {loading && (
+          <span className="loading loading-spinner text-error"></span>
+        )}
+        {!loading && user && (
+          <div className="dropdown dropdown-end border border-white rounded-full">
+            <div
+              tabIndex={0}
+              role="button"
+              className="btn btn-ghost btn-circle avatar"
+            >
+              <div className="w-10 rounded-full">
+                <img alt="user profile" src={user.photoURL} />
+              </div>
+            </div>
+            <ul
+              tabIndex="-1"
+              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+            >
+              <li>
+                <a>{user.name}</a>
+              </li>
+              <li>
+                <a>Profile</a>
+              </li>
+              <li>
+                <button onClick={() => logOut()}>Logout</button>
+              </li>
+            </ul>
+          </div>
+        )}
+        {!loading && !user && (
+          <div className="space-x-7 px-14 h-13 lg:flex justify-center items-center rounded-full hidden">
+            <Link
+              to="/login"
+              className="flex justify-center items-center gap-2 transition delay-150 ease-in-out hover:-translate-y-1 hover:scale-100 cursor-pointer font-bold"
+            >
+              <button className="cursor-pointer">Log In</button>
+              <LuLogIn />
+            </Link>
+            <Link
+              to="/register"
+              className="flex justify-center items-center gap-2 transition delay-150 ease-in-out hover:-translate-y-1 hover:scale-100 cursor-pointer font-bold"
+            >
+              <button className="cursor-pointer">Register</button>
+              <SiGnuprivacyguard />
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );
