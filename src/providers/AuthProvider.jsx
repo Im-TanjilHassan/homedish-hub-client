@@ -3,6 +3,7 @@ import { auth } from "../firebase/firebase.config";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
+  signInWithEmailAndPassword,
   signOut,
   updateProfile,
 } from "firebase/auth";
@@ -25,11 +26,17 @@ const AuthProvider = ({ children }) => {
       displayName: name,
       photoURL: imageUrl,
     });
-    };
-    
-    const refreshUser = () => {
-      setUser({ ...auth.currentUser });
-    };
+  };
+
+  const refreshUser = () => {
+    setUser({ ...auth.currentUser });
+  };
+
+  // login
+  const loginUser = (email, password) => {
+    setLoading(true);
+    return signInWithEmailAndPassword(auth, email, password);
+  };
 
   //logout
   const logOut = () => {
@@ -51,6 +58,7 @@ const AuthProvider = ({ children }) => {
     loading,
     registerUser,
     updateUser,
+    loginUser,
     logOut,
     refreshUser,
   };

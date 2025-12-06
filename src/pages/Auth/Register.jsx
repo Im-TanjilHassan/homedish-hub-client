@@ -8,7 +8,7 @@ import {
   FaRegUser,
 } from "react-icons/fa6";
 import { IoMdMail } from "react-icons/io";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { AuthContext } from "../../providers/AuthProvider";
 import Swal from "sweetalert2";
 
@@ -16,6 +16,8 @@ const Register = () => {
   const { registerUser, updateUser, refreshUser } = useContext(AuthContext);
   const [showPass, setShowPass] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -24,6 +26,7 @@ const Register = () => {
     formState: { errors },
   } = useForm();
 
+  const from = location.state?.from?.pathname || "/";
   const imgbbKey = import.meta.env.VITE_IMAGEBB_KEY;
 
   const handleRegister = async (data) => {
@@ -60,6 +63,7 @@ const Register = () => {
       });
 
       reset();
+      navigate(from, { replace: true });
     } catch (err) {
       console.log(err);
 
@@ -300,9 +304,6 @@ const Register = () => {
                       {errors.confirmPassword.message}
                     </p>
                   )}
-                  <div>
-                    <p className="text-gray-600">Forgot password?</p>
-                  </div>
                 </div>
                 <button
                   type="submit"

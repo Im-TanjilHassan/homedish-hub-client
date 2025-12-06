@@ -25,13 +25,27 @@ const Navbar = () => {
         <GiHotMeal />
         <li>Meals</li>
       </NavLink>
+      <Link
+        to="/login"
+        className="md:hidden flex justify-center items-center gap-2 cursor-pointer font-bold px-3 py-2"
+      >
+        <LuLogIn />
+        <button className="cursor-pointer">Log In</button>
+      </Link>
+      <Link
+        to="/register"
+        className="md:hidden flex justify-center items-center gap-2 cursor-pointer font-bold px-3 py-2"
+      >
+        <SiGnuprivacyguard />
+        <button className="cursor-pointer">Register</button>
+      </Link>
     </>
   );
 
   console.log(user);
   
   return (
-    <div className="w-7xl mx-auto navbar bg-base-100 mt-6 rounded-4xl shadow-xl/30 lg:px-6 mb-10">
+    <div className="lg:w-7xl mx-auto navbar bg-base-100 lg:mt-6 rounded-4xl shadow-xl/30 lg:px-6 mb-10">
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -53,7 +67,7 @@ const Navbar = () => {
           </div>
           <ul
             tabIndex="-1"
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow space-y-5"
+            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-5 w-100 border ml-auto p-2 shadow space-y-5"
           >
             {menu}
           </ul>
@@ -61,10 +75,9 @@ const Navbar = () => {
         <div className="flex justify-center items-center gap-3">
           <img src={logo} className="w-8 h-8" alt="" />
 
-          <a className="text-xl font-bold">
-            <span className="text-orange-600">H</span>ome
-            <span className="text-orange-600">D</span>ish-
-            <span className="text-orange-600">Hub</span>
+          <a className="text-xl font-bold text-orange-600">
+            HomeDish
+            <span className="text-white">-Hub</span>
           </a>
         </div>
       </div>
