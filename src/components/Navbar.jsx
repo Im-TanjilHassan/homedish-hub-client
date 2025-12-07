@@ -6,6 +6,7 @@ import { SiGnuprivacyguard } from "react-icons/si";
 import logo from '../assets/logo.png'
 import { useContext } from "react";
 import { AuthContext } from "../providers/AuthProvider";
+import ThemeToggle from "./ThemeToggle";
 
 const Navbar = () => {
   const {user, loading, logOut} = useContext(AuthContext)
@@ -75,9 +76,9 @@ const Navbar = () => {
         <div className="flex justify-center items-center gap-3">
           <img src={logo} className="w-8 h-8" alt="" />
 
-          <a className="text-xl font-bold text-orange-600">
+          <a className="text-xl font-bold text-primary">
             HomeDish
-            <span className="text-white">-Hub</span>
+            <span className="text-neutral-content">-Hub</span>
           </a>
         </div>
       </div>
@@ -126,11 +127,12 @@ const Navbar = () => {
             </Link>
             <Link
               to="/register"
-              className="flex justify-center items-center gap-2 transition delay-150 ease-in-out hover:-translate-y-1 hover:scale-100 cursor-pointer font-bold"
+              className="flex justify-center items-center gap-2 transition delay-150 ease-in-out hover:-translate-y-1 hover:scale-100 cursor-pointer font-bold "
             >
               <button className="cursor-pointer">Register</button>
               <SiGnuprivacyguard />
             </Link>
+            <ThemeToggle></ThemeToggle>
           </div>
         )}
       </div>
