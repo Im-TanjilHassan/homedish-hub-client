@@ -11,6 +11,8 @@ import { IoMdMail } from "react-icons/io";
 import { Link, useLocation, useNavigate } from "react-router";
 import { AuthContext } from "../../providers/AuthProvider";
 import Swal from "sweetalert2";
+import { useMutation } from "@tanstack/react-query";
+import axiosPublic from "../../api/axiosPublic";
 
 const Register = () => {
   const { registerUser, updateUser, refreshUser } = useContext(AuthContext);
@@ -28,6 +30,14 @@ const Register = () => {
 
   const from = location.state?.from?.pathname || "/";
   const imgbbKey = import.meta.env.VITE_IMAGEBB_KEY;
+
+  const registerUserMutation = useMutation({
+    mutationFn: async (userProfile) => {
+      const res = await axiosPublic.post("/registration", userProfile)
+
+      return res.data
+    }
+  })
 
   const handleRegister = async (data) => {
     console.log(data);
@@ -49,8 +59,18 @@ const Register = () => {
       const uploadImg = await uploadRes.json();
       const imageUrl = uploadImg.data.url;
 
-      await registerUser(data.email, data.password);
+      const user = await registerUser(data.email, data.password);
       await updateUser(data.name, imageUrl);
+
+      const profileToSave = {
+        name: data.name,
+        email: data.email,
+        image: imageUrl || user.user.photoURL || "",
+        address: data.address || "",
+        uid: user.user.uid,
+      };
+
+      await registerUserMutation.mutateAsync(profileToSave)
 
       setShowLoader(false);
       refreshUser();
