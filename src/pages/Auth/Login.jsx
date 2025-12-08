@@ -5,6 +5,8 @@ import { AuthContext } from "../../providers/AuthProvider";
 import { IoMdMail } from "react-icons/io";
 import { FaArrowRight, FaEye, FaLock, FaRegEyeSlash } from "react-icons/fa6";
 import { Link, useLocation, useNavigate } from "react-router";
+import { useMutation } from "@tanstack/react-query";
+import axiosPublic from "../../api/axiosPublic";
 
 const Login = () => {
   const { loginUser, refreshUser } = useContext(AuthContext);
@@ -23,11 +25,21 @@ const Login = () => {
 
   const from = location.state?.from?.pathname || "/";
 
-  const handleRegister = async (data) => {
+  const loginMutation = useMutation({
+    mutationFn: async (email) => {
+      const res = await axiosPublic.post("/login", { email });
+
+      return res.data
+    }
+  })
+
+  const handleLogin = async (data) => {
     try {
       setShowLoader(true);
 
-      loginUser(data.email, data.password);
+      const user = await loginUser(data.email, data.password);
+      
+      await loginMutation.mutateAsync(user.user.email);
 
       setShowLoader(false);
       refreshUser();
@@ -46,7 +58,7 @@ const Login = () => {
       console.log(err);
 
       Swal.fire({
-        title: "Error",
+        title: "Login failed",
         text: err.message,
         icon: "error",
       });
@@ -70,7 +82,7 @@ const Login = () => {
           {!showLoader && (
             <div>
               <form
-                onSubmit={handleSubmit(handleRegister)}
+                onSubmit={handleSubmit(handleLogin)}
                 className="space-y-4"
               >
                 {/* email */}

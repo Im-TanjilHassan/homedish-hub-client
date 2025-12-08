@@ -90,30 +90,35 @@ const Navbar = () => {
           <span className="loading loading-spinner text-error"></span>
         )}
         {!loading && user && (
-          <div className="dropdown dropdown-end border border-white rounded-full">
-            <div
-              tabIndex={0}
-              role="button"
-              className="btn btn-ghost btn-circle avatar"
-            >
-              <div className="w-10 rounded-full">
-                <img alt="user profile" src={user.photoURL} />
+          <div className="flex justify-center items-center gap-5">
+            <div className="dropdown dropdown-end">
+              <div
+                tabIndex={0}
+                role="button"
+                className="btn btn-ghost btn-circle avatar border border-white rounded-full"
+              >
+                <div className="w-10 rounded-full">
+                  <img alt="user profile" src={user.photoURL} />
+                </div>
               </div>
+              <ul
+                tabIndex="-1"
+                className="menu menu-sm dropdown-content bg-base-200 rounded-box z-1 mt-3 w-52 p-2 shadow"
+              >
+                <li>
+                  <a>{user.name}</a>
+                </li>
+                <Link to="/dashboard">
+                  <li>Dashboard</li>
+                </Link>
+                <li>
+                  <button onClick={() => logOut()}>Logout</button>
+                </li>
+              </ul>
             </div>
-            <ul
-              tabIndex="-1"
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
-            >
-              <li>
-                <a>{user.name}</a>
-              </li>
-              <li>
-                <a>Profile</a>
-              </li>
-              <li>
-                <button onClick={() => logOut()}>Logout</button>
-              </li>
-            </ul>
+            <div>
+              <ThemeToggle></ThemeToggle>
+            </div>
           </div>
         )}
         {!loading && !user && (
