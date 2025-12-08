@@ -7,6 +7,10 @@ import logo from '../assets/logo.png'
 import { useContext } from "react";
 import { AuthContext } from "../providers/AuthProvider";
 import ThemeToggle from "./ThemeToggle";
+import { BiSolidDashboard } from "react-icons/bi";
+import { MdLogout } from "react-icons/md";
+
+
 
 const Navbar = () => {
   const {user, loading, logOut} = useContext(AuthContext)
@@ -14,14 +18,26 @@ const Navbar = () => {
     <>
       <NavLink
         to="/"
-        className="flex justify-center items-center gap-2 hover:shadow-xl/50 rounded-xl px-3 py-2"
+        className={({ isActive }) =>
+          `flex justify-center items-center gap-2 text-neutral-content font-semibold hover:shadow-xl/50 rounded-xl px-3 py-2 ${
+            isActive
+              ? "rounded-l-2xl text-neutral-content shadow-xl/50"
+              : "text-gray-300"
+          }`
+        }
       >
         <IoHome />
         <li> Home</li>
       </NavLink>
       <NavLink
         to="/meals"
-        className="flex justify-center items-center gap-2 hover:shadow-xl/50 rounded-xl px-3 py-2"
+        className={({ isActive }) =>
+          `flex justify-center items-center gap-2 text-neutral-content hover:shadow-xl/50 rounded-xl px-3 py-2 ${
+            isActive
+              ? "rounded-l-2xl text-neutral-content shadow-xl/50"
+              : "text-gray-300"
+          }`
+        }
       >
         <GiHotMeal />
         <li>Meals</li>
@@ -103,16 +119,23 @@ const Navbar = () => {
               </div>
               <ul
                 tabIndex="-1"
-                className="menu menu-sm dropdown-content bg-base-200 rounded-box z-1 mt-3 w-52 p-2 shadow"
+                className="menu menu-sm dropdown-content bg-base-200 rounded-box z-1 mt-3 w-52 p-2  space-y-3 shadow"
               >
-                <li>
-                  <a>{user.name}</a>
+                <li className="bg-base-300 py-2 px-2 text-center">
+                  Hi, {user.displayName}
                 </li>
-                <Link to="/dashboard">
+                <Link
+                  to="/dashboard"
+                  className="flex justify-center items-center gap-2 hover:bg-base-300 py-1"
+                >
+                  <BiSolidDashboard />
                   <li>Dashboard</li>
                 </Link>
                 <li>
-                  <button onClick={() => logOut()}>Logout</button>
+                  <button className="font-bold hover:bg-base-300 flex justify-center items-center text-md" onClick={() => logOut()}>
+                    Logout
+                  <MdLogout />
+                  </button>
                 </li>
               </ul>
             </div>

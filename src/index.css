@@ -6,9 +6,9 @@
     default: true;
     color-scheme: light;
 
-    --color-base-100: #ffffff;
-        --color-base-200: #f8f8f8;
-        --color-base-300: #eeeeee;
+    --color-base-100: #ececec;
+        --color-base-200: #d3d1d1;
+        --color-base-300: #b8b8b8;
     
         --color-primary: #e85a0c;
         --color-primary-content: #ffffff;
@@ -24,9 +24,9 @@
     name: "dark";
     color-scheme: dark;
 
-    --color-base-100: #0d0a09;
-        --color-base-200: #1a140f;
-        --color-base-300: #251d16;
+    --color-base-100: #1d1614;
+        --color-base-200: #130e0d;
+        --color-base-300: #5f230d;
     
         --color-primary: #ff4500;
         --color-primary-content: #ffffff;
@@ -38,8 +38,10 @@
 }
 
 .active{
-    color: #ff4500;
+    
+    /* color: #130e0d; */
+    color: #b8b8b8;
+    background-color: #5f230d;
     box-shadow: 0 25px 30px -9px rgba(0, 0, 0, 0.5),
             0 10px 10px -5px rgba(0, 0, 0, 0.5);
-            font-weight: bold;
 }
