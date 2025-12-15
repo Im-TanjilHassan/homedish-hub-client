@@ -1,13 +1,56 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { AuthContext } from "../../../providers/AuthProvider";
 import { FaEdit } from "react-icons/fa";
+import axiosSecure from "../../../api/axiosSecure";
+import Swal from "sweetalert2";
 
 const Profile = () => {
-  const { dbUser, user } = useContext(AuthContext);
+  const { dbUser, user, refreshUser } = useContext(AuthContext);
+  const [reqPending, setReqPending] = useState(false)
+
+  const handleChefRequest = async () => {
+    const result = await Swal.fire({
+      title: "Become a Chef?",
+      text: "This request will be sent for admin approval.",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes, send request",
+      cancelButtonText: "No",
+      reverseButtons: true,
+    });
+
+    if (!result.isConfirmed) return;
+
+    setReqPending(true);
+    try {
+      await axiosSecure.post("/chefRequest");
+      console.log("working");
+      
+      Swal.fire({
+        icon: "success",
+        title: "Request Sent",
+        text: "Your chef request is now pending approval.",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
+      refreshUser();
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Failed",
+        text: err.response?.data?.message || "Something went wrong",
+      });
+    } finally {
+      setReqPending(false)
+    }
+  };
+
+
 
   return (
     <div className="min-h-screen bg-base-200 rounded-2xl flex justify-center px-4 py-10">
-      <main className="w-full max-w-5xl space-y-6">
+      <div className="w-full max-w-5xl space-y-6">
         {/* Page Header */}
         <header className="mb-4">
           <h1 className="text-xl md:text-2xl font-semibold tracking-tight text-primary">
@@ -115,8 +158,12 @@ const Profile = () => {
           </div>
           {dbUser.role !== "admin" && (
             <div className="w-full flex justify-end items-center gap-5">
-              <button className="rounded-lg shadow-xl/30 px-3 py-1.5 text-white font-bold bg-primary hover:bg-primary/80 cursor-pointer">
-                Be A Chef
+              <button
+                disabled={reqPending}
+                onClick={handleChefRequest}
+                className="rounded-lg shadow-xl/30 px-3 py-1.5 text-white font-bold bg-primary hover:bg-primary/80 cursor-pointer"
+              >
+                {reqPending ? "Sending..." : "Be A Chef"}
               </button>
               <button className="rounded-lg shadow-xl/30 px-3 py-1.5 text-white font-bold bg-primary hover:bg-primary/80 cursor-pointer">
                 Be An Admin
@@ -124,7 +171,7 @@ const Profile = () => {
             </div>
           )}
         </section>
-      </main>
+      </div>
     </div>
   );
 };

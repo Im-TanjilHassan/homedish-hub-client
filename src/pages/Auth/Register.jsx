@@ -13,6 +13,7 @@ import { AuthContext } from "../../providers/AuthProvider";
 import Swal from "sweetalert2";
 import { useMutation } from "@tanstack/react-query";
 import axiosPublic from "../../api/axiosPublic";
+import axiosSecure from "../../api/axiosSecure";
 
 const Register = () => {
   const { registerUser, updateUser, refreshUser } = useContext(AuthContext);
@@ -40,7 +41,6 @@ const Register = () => {
   })
 
   const handleRegister = async (data) => {
-    console.log(data);
 
     try {
       setShowLoader(true);
@@ -71,6 +71,8 @@ const Register = () => {
       };
 
       await registerUserMutation.mutateAsync(profileToSave)
+
+      await axiosSecure.post("/login", { email: data.email });
 
       setShowLoader(false);
       refreshUser();
