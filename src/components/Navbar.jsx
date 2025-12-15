@@ -4,7 +4,7 @@ import { GiHotMeal } from "react-icons/gi";
 import { LuLogIn } from "react-icons/lu";
 import { SiGnuprivacyguard } from "react-icons/si";
 import logo from '../assets/logo.png'
-import { useContext } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../providers/AuthProvider";
 import ThemeToggle from "./ThemeToggle";
 import { BiSolidDashboard } from "react-icons/bi";
@@ -13,7 +13,25 @@ import { MdLogout } from "react-icons/md";
 
 
 const Navbar = () => {
-  const {user, loading, logOut} = useContext(AuthContext)
+  const { user, loading, logOut } = useContext(AuthContext)
+  const [open, setOpen] = useState(false);
+  const [locked, setLocked] = useState(false);
+  const dropdownRef = useRef(null);
+
+  console.log(user);
+  
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setOpen(false);
+        setLocked(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
   const menu = (
     <>
       <NavLink
@@ -107,41 +125,64 @@ const Navbar = () => {
         )}
         {!loading && user && (
           <div className="flex justify-center items-center gap-5">
-            <div className="dropdown dropdown-end">
-              <div
-                tabIndex={0}
-                role="button"
+            <div
+              ref={dropdownRef}
+              className="relative"
+              onMouseEnter={() => !locked && setOpen(true)}
+              onMouseLeave={() => !locked && setOpen(false)}
+            >
+              {/* Avatar */}
+              <button
+                onClick={() => {
+                  setOpen(true);
+                  setLocked(true);
+                }}
                 className="btn btn-ghost btn-circle avatar border border-white rounded-full"
               >
                 <div className="w-10 rounded-full">
                   <img alt="user profile" src={user.photoURL} />
                 </div>
-              </div>
-              <ul
-                tabIndex="-1"
-                className="menu menu-sm dropdown-content bg-base-200 rounded-box z-1 mt-3 w-52 p-2  space-y-3 shadow"
-              >
-                <li className="bg-base-300 py-2 px-2 text-center">
-                  Hi, {user.displayName}
-                </li>
-                <Link
-                  to="/dashboard"
-                  className="flex justify-center items-center gap-2 hover:bg-base-300 py-1"
-                >
-                  <BiSolidDashboard />
-                  <li>Dashboard</li>
-                </Link>
-                <li>
-                  <button className="font-bold hover:bg-base-300 flex justify-center items-center text-md" onClick={() => logOut()}>
-                    Logout
-                  <MdLogout />
-                  </button>
-                </li>
-              </ul>
+              </button>
+
+              {/* Dropdown */}
+              {open && (
+                <ul className="absolute right-0 w-52 bg-base-200 rounded-box p-2 space-y-3 shadow z-50">
+                  <li className="bg-base-300 py-2 px-2 text-center rounded">
+                    Hi, {user.displayName}
+                  </li>
+
+                  <li>
+                    <Link
+                      to="/dashboard"
+                      className="flex justify-center items-center gap-2 hover:bg-base-300 py-2 rounded"
+                      onClick={() => {
+                        setOpen(false);
+                        setLocked(false);
+                      }}
+                    >
+                      <BiSolidDashboard />
+                      Dashboard
+                    </Link>
+                  </li>
+
+                  <li>
+                    <button
+                      onClick={async() => {
+                        await logOut();
+                        setOpen(false);
+                        setLocked(false);
+                      }}
+                      className="w-full font-bold hover:bg-base-300 flex justify-center items-center gap-2 py-2 rounded"
+                    >
+                      Logout
+                      <MdLogout />
+                    </button>
+                  </li>
+                </ul>
+              )}
             </div>
-            <div>
-              <ThemeToggle></ThemeToggle>
-            </div>
+
+            <ThemeToggle />
           </div>
         )}
         {!loading && !user && (

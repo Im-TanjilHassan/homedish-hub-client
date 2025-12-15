@@ -9,12 +9,15 @@ import { useMutation } from "@tanstack/react-query";
 import axiosPublic from "../../api/axiosPublic";
 
 const Login = () => {
-  const { loginUser, refreshUser } = useContext(AuthContext);
+  const { loginUser, refreshUser, user, dbUser } = useContext(AuthContext);
   const [showPass, setShowPass] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
+
+  console.log(user, dbUser);
+  
 
   const {
     register,
