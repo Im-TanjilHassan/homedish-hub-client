@@ -10,6 +10,7 @@ import MyOrder from "../pages/DashboardPages/myOrder/MyOrder";
 import MyReview from "../pages/DashboardPages/myReview/MyReview";
 import FavoriteMeal from "../pages/DashboardPages/fvrtMeal/FavoriteMeal";
 import PrivateRoute from "./PrivateRoute";
+import ManageRequest from "../pages/DashboardPages/adminDashboard/manageRequest/ManageRequest";
 
 export const router = createBrowserRouter([
     {
@@ -61,6 +62,10 @@ export const router = createBrowserRouter([
             {
                 path: "favoriteMeal",
                 Component: FavoriteMeal
+            },
+            {
+                path: "manageRequest",
+                Component: ManageRequest
             },
         ]
     }

@@ -28,7 +28,7 @@ const DashboardLayout = () => {
 
       <li>
         <NavLink
-          to="myOrder"
+          to="/manageUser"
           className={({ isActive }) =>
             `w-full block px-4 py-2 transition text-neutral-content font-semibold hover:bg-base-300 hover:rounded-l-2xl hover:shadow-xl/50 hover:font-bold
      ${isActive ? "bg-base-300 rounded-l-2xl shadow-xl/50" : "text-gray-300"}`
@@ -40,7 +40,7 @@ const DashboardLayout = () => {
 
       <li>
         <NavLink
-          to="myReview"
+          to="manageRequest"
           className={({ isActive }) =>
             `w-full block px-4 py-2 transition text-neutral-content font-semibold hover:bg-base-300 hover:rounded-l-2xl hover:shadow-xl/50 hover:font-bold 
      ${isActive ? "bg-base-300 rounded-l-2xl shadow-xl/50" : "text-gray-300"}`
@@ -170,7 +170,7 @@ const DashboardLayout = () => {
         <div className="hidden md:block lg:block w-64 bg-base-200 border-r border-r-base-100 py-5 min-h-screen relative">
           <div>
             {dbUser.role === "admin" && adminMenu}
-            {dbUser.role === "user" && userMenu}
+            {dbUser.role === "user" || dbUser.role === "chef-pending" && userMenu}
           </div>
 
           <div className="sticky top-135 z-50 w-full ">

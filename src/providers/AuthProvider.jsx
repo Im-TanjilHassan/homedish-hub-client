@@ -30,9 +30,24 @@ const AuthProvider = ({ children }) => {
     });
   };
 
+  //re fresh user data
   const refreshUser = () => {
     setUser({ ...auth.currentUser });
   };
+
+  // for refetch dbUser data
+  const refetchProfile = async () => {
+    if (!auth.currentUser) return;
+
+    try {
+      const res = await axiosSecure.get("/profile");
+      setDbUser(res.data);
+    } catch (err) {
+      console.log("Profile refetch failed", err);
+      setDbUser(null);
+    }
+  };
+
 
   // login
   const loginUser = async (email, password) => {
@@ -48,6 +63,7 @@ const AuthProvider = ({ children }) => {
       const res = await axiosSecure.get("/profile");
       setDbUser(res.data);
     } catch (err) {
+      console.log(err);
       setDbUser(null);
     }
     
@@ -98,6 +114,7 @@ const AuthProvider = ({ children }) => {
     loginUser,
     logOut,
     refreshUser,
+    refetchProfile,
   };
   return (
     <AuthContext.Provider value={userInfo}>{children}</AuthContext.Provider>

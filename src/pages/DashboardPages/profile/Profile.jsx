@@ -5,7 +5,7 @@ import axiosSecure from "../../../api/axiosSecure";
 import Swal from "sweetalert2";
 
 const Profile = () => {
-  const { dbUser, user, refreshUser } = useContext(AuthContext);
+  const { dbUser, user, refetchProfile } = useContext(AuthContext);
   const [reqPending, setReqPending] = useState(false)
 
   const handleChefRequest = async () => {
@@ -24,7 +24,8 @@ const Profile = () => {
     setReqPending(true);
     try {
       await axiosSecure.post("/chefRequest");
-      console.log("working");
+
+      refetchProfile();
       
       Swal.fire({
         icon: "success",
@@ -34,7 +35,6 @@ const Profile = () => {
         showConfirmButton: false,
       });
 
-      refreshUser();
     } catch (err) {
       Swal.fire({
         icon: "error",
@@ -45,8 +45,6 @@ const Profile = () => {
       setReqPending(false)
     }
   };
-
-
 
   return (
     <div className="min-h-screen bg-base-200 rounded-2xl flex justify-center px-4 py-10">
@@ -159,9 +157,9 @@ const Profile = () => {
           {dbUser.role !== "admin" && (
             <div className="w-full flex justify-end items-center gap-5">
               <button
-                disabled={reqPending}
+                disabled={dbUser.role === "chef-pending"}
                 onClick={handleChefRequest}
-                className="rounded-lg shadow-xl/30 px-3 py-1.5 text-white font-bold bg-primary hover:bg-primary/80 cursor-pointer"
+                className="rounded-lg shadow-xl/30 px-3 py-1.5 text-white font-bold bg-primary hover:bg-primary/80 cursor-pointer disabled:bg-base-300 disabled:text-gray-500"
               >
                 {reqPending ? "Sending..." : "Be A Chef"}
               </button>
