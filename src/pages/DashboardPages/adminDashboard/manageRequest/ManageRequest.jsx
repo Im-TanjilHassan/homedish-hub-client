@@ -5,15 +5,26 @@ import axiosSecure from '../../../../api/axiosSecure';
 
 const ManageRequest = () => {
 
-    const { data: pendingChefs = [], refetch } = useQuery({
+    const { data: pendingChefs = [], isLoading, isError, error } = useQuery({
       queryKey: ["pendingChefs"],
+      retry: false,
       queryFn: async () => {
-        const res = await axiosSecure.get("/chef-requests");
+        const res = await axiosSecure.get("/chefRequests");
         return res.data;
       },
     });
 
-    console.log(pendingChefs);
+  if (isLoading) {
+     return <p>Loading...</p>;
+  }
+
+  if (isError) {
+    console.log(error);
+    return <p>Error loading chef request</p>
+  }
+  
+  console.log(pendingChefs);
+  
     
 
     return (
@@ -35,7 +46,26 @@ const ManageRequest = () => {
               <h2 className="text-lg md:text-xl font-semibold tracking-tight text-primary pb-5 mb-5 border-b">
                 Chef Request's
               </h2>
-              <RequestTable></RequestTable>
+              <table className="table">
+                {/* head */}
+                <thead className="text-center">
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Request status</th>
+                    <th>Requested Time</th>
+                    <th>Decision</th>
+                  </tr>
+                </thead>
+                <tbody className='space-y-15'>
+                  {pendingChefs.map((pendingData) => (
+                    <RequestTable
+                      key={pendingChefs._id}
+                      pendingData={pendingData}
+                    ></RequestTable>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </section>
 
