@@ -157,6 +157,7 @@ const Profile = () => {
           {dbUser.role !== "admin" && (
             <div className="w-full flex justify-end items-center gap-5">
               <button
+                hidden={dbUser.role === "chef"}
                 disabled={dbUser.role === "chef-pending"}
                 onClick={handleChefRequest}
                 className="rounded-lg shadow-xl/30 px-3 py-1.5 text-white font-bold bg-primary hover:bg-primary/80 cursor-pointer disabled:bg-base-300 disabled:text-gray-500"

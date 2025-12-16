@@ -2,10 +2,11 @@ import React from 'react';
 import RequestTable from './requestTable/RequestTable';
 import { useQuery } from '@tanstack/react-query';
 import axiosSecure from '../../../../api/axiosSecure';
+import Swal from 'sweetalert2';
 
 const ManageRequest = () => {
 
-    const { data: pendingChefs = [], isLoading, isError, error } = useQuery({
+    const { data: pendingChefs = [], refetch, isLoading, isError, error } = useQuery({
       queryKey: ["pendingChefs"],
       retry: false,
       queryFn: async () => {
@@ -23,9 +24,75 @@ const ManageRequest = () => {
     return <p>Error loading chef request</p>
   }
   
-  console.log(pendingChefs);
+  // console.log(pendingChefs);
+  const handleAcceptReq = async(userId) => {
+    const result = await Swal.fire({
+      title: "Approve Chef Request?",
+      text: "This user will become a chef.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, approve",
+      cancelButtonText: "Cancel",
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+      const res = await axiosSecure.patch(`/chefRequests/accept/${userId}`);
+
+      if (res.data?.message) {
+        Swal.fire({
+          title: "Approved!",
+          text: res.data.message,
+          icon: "success",
+          timer: 1500,
+        });
+
+        refetch();
+      }
+    } catch (err) {
+      console.error(err);
+      Swal.fire({
+        title: "Error",
+        text: err.response?.data?.message || "Approval failed",
+        icon: "error",
+      });
+    }
+  }
   
-    
+  const handleRejectReq = async(userId) => {
+    const result = await Swal.fire({
+      title: "Reject Chef Request?",
+      text: "This request will be rejected.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, reject",
+      cancelButtonText: "Cancel",
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+      const res = await axiosSecure.patch(`/chefRequests/reject/${userId}`);
+
+      if (res.data?.message) {
+        Swal.fire({
+          title: "Rejected",
+          text: res.data.message,
+          icon: "success",
+          timer: 1500,
+        });
+
+        refetch();
+      }
+    } catch (err) {
+      Swal.fire({
+        title: "Error",
+        text: err.response?.data?.message || "Rejection failed",
+        icon: "error",
+      });
+    }
+  } 
 
     return (
       <div className="min-h-screen bg-base-200 rounded-2xl flex justify-center px-4 py-10">
@@ -57,11 +124,13 @@ const ManageRequest = () => {
                     <th>Decision</th>
                   </tr>
                 </thead>
-                <tbody className='space-y-15'>
+                <tbody className="space-y-15">
                   {pendingChefs.map((pendingData) => (
                     <RequestTable
                       key={pendingChefs._id}
                       pendingData={pendingData}
+                      handleAcceptReq={handleAcceptReq}
+                      handleRejectReq={handleRejectReq}
                     ></RequestTable>
                   ))}
                 </tbody>

@@ -1,7 +1,8 @@
 import { format } from "date-fns";
 
-const RequestTable = ({ pendingData }) => {
-  const { name, email, role, chefRequestedAt, image, address } = pendingData;
+const RequestTable = ({ pendingData, handleAcceptReq, handleRejectReq }) => {
+  const { _id, name, email, role, chefRequestedAt, image, address } =
+    pendingData;
 
   return (
     <tr className="text-center hover:bg-base-300/60">
@@ -22,10 +23,16 @@ const RequestTable = ({ pendingData }) => {
       <td>{role}</td>
       <td>{format(new Date(chefRequestedAt), "dd/MM/yyyy hh:mm a")}</td>
       <th className="space-x-2">
-        <button className="btn bg-green-400 text-black font-semibold hover:bg-green-600 btn-xs">
+        <button
+          onClick={() => handleAcceptReq(_id)}
+          className="btn bg-green-400 text-black font-semibold hover:bg-green-600 btn-xs"
+        >
           Accept
         </button>
-        <button className="btn bg-base-300 font-semibold hover:bg-base-300/80 btn-xs">
+        <button
+          onClick={() => handleRejectReq(_id)}
+          className="btn bg-base-300 font-semibold hover:bg-base-300/80 btn-xs"
+        >
           Reject
         </button>
       </th>
