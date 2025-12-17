@@ -1,33 +1,101 @@
-import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { AuthContext } from "../../../../providers/AuthProvider";
+import { useContext, useState } from "react";
+import axiosSecure from "../../../../api/axiosSecure";
+import Swal from "sweetalert2";
 
 const CreateMeal = () => {
   const { dbUser } = useContext(AuthContext);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
-    //   watch,
-    //   setValue,
   } = useForm({
     defaultValues: {
       foodName: "",
       chefName: "",
       price: "",
-      rating: "",
       ingredients: "",
       estimatedDeliveryTime: "",
       chefExperience: "",
-      chefId: "",
-      // userEmail,
+      foodImage: null,
     },
   });
 
-  const onSubmitForm = (data) => {
-    console.log(data);
+  const imgbbKey = import.meta.env.VITE_IMAGEBB_KEY;
+
+  const onSubmitForm = async (data) => {
+    try {
+      setIsLoading(true)
+      if (!data.foodImage || data.foodImage.length === 0) {
+        throw new Error("Food image is required");
+      }
+
+      const imageFile = data.foodImage[0];
+
+      // upload image to imgBB
+      const formData = new FormData();
+      formData.append("image", imageFile);
+
+      const uploadRes = await fetch(
+        `https://api.imgbb.com/1/upload?key=${imgbbKey}`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const uploadData = await uploadRes.json();
+
+      if (!uploadData.success) {
+        throw new Error("Image upload failed");
+      }
+
+      const imageUrl = uploadData.data.url;
+
+      // convert ingredients string to array
+      const ingredientsArray = data.ingredients
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean);
+
+      // new meal data
+      const mealData = {
+        foodName: data.foodName,
+        chefName: dbUser.name,
+        foodImage: imageUrl,
+        price: data.price,
+        ingredients: ingredientsArray,
+        estimatedDeliveryTime: data.estimatedDeliveryTime,
+        chefExperience: data.chefExperience,
+      };
+
+      await axiosSecure.post("/meals", mealData);
+
+      Swal.fire({
+        title: "Success!",
+        text: "Meal created successfully",
+        icon: "success",
+        timer: 1500,
+      });
+
+      reset()
+      setPreviewUrl(null);
+      setIsLoading(false)
+    } catch (err) {
+      setIsLoading(false)
+      Swal.fire({
+        title: "Error",
+        text: err.message || "Failed to create meal",
+        icon: "error",
+      });
+    }
   };
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-base-200 rounded-2xl">
       <div className="w-full max-w-4xl mx-auto py-10">
@@ -47,6 +115,82 @@ const CreateMeal = () => {
           onSubmit={handleSubmit(onSubmitForm)}
           className="grid gap-6 lg:grid-cols-[minmax(0,2fr),minmax(0,1.3fr)]"
         >
+          {/* Image upload */}
+          <div className="rounded-2xl border border-base-300 bg-base-100 shadow-xl/30 backdrop-blur">
+            <div className="border-b border-base-300 px-5 sm:px-6 py-4">
+              <h2 className="text-lg font-semibold tracking-tight text-neutral-content">
+                Food Image
+              </h2>
+              <p className="mt-1 text-base text-slate-400">
+                Upload a high-quality photo of the meal.
+              </p>
+            </div>
+
+            <div className="px-5 sm:px-6 py-5 space-y-4">
+              <label className="block">
+                <span className="block text-xs font-medium tracking-tight text-neutral-content mb-2">
+                  Image Upload
+                </span>
+                <div className="relative flex flex-col items-center justify-center rounded-xl border border-dashed border-base-300 bg-base-200 px-4 py-6 text-center cursor-pointer hover:border-base-300 hover:bg-base-100 transition">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    {...register("foodImage", {
+                      required: "Food image is required",
+                    })}
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        setPreviewUrl(URL.createObjectURL(file));
+                      }
+                    }}
+                    className="absolute inset-0 h-full w-full opacity-0 cursor-pointer"
+                  />
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="text-xs text-slate-300">
+                      <span className="font-medium">Click to upload</span> or
+                      drag &amp; drop
+                    </div>
+                    <p className="text-xs text-neutral-content0">
+                      JPG, PNG up to 5MB
+                    </p>
+                  </div>
+                </div>
+                {errors.foodImage && (
+                  <p className="text-xs text-rose-400 mt-2">
+                    {errors.foodImage.message}
+                  </p>
+                )}
+              </label>
+
+              {previewUrl && (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium tracking-tight text-neutral-content">
+                      Preview
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPreviewUrl(null);
+                      }}
+                      className="inline-flex items-center gap-1 rounded-full border border-base-300 bg-base-100 px-2 py-1 text-[0.7rem] text-neutral-content hover:bg-base-200 transition"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                  <div className="overflow-hidden rounded-xl border border-base-300 bg-base-100">
+                    <img
+                      src={previewUrl}
+                      alt="Food preview"
+                      className="w-full h-40 sm:h-52 object-cover"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
           {/* Left column */}
           <div className="space-y-6">
             <div className="rounded-2xl border border-primary/20 bg-base-100 shadow-xl/30 backdrop-blur">
@@ -90,10 +234,10 @@ const CreateMeal = () => {
                     </label>
                     <input
                       type="text"
-                      {...register("chefName", {
-                        required: "Chef name is required",
-                      })}
-                      className="w-full rounded-lg border border-base-300 bg-base-200 px-3.5 py-2.5 text-base text-neutral-content placeholder-slate-500 outline-none focus:border-base-300 focus:ring-2 focus:ring-base-300/80 transition"
+                      {...register("chefName")}
+                      readOnly
+                      value={dbUser.name}
+                      className="w-full rounded-lg border border-base-300 bg-base-200 px-3.5 py-2.5 text-slate-500 placeholder-slate-500 outline-none focus:border-base-300 focus:ring-2 focus:ring-base-300/80 transition"
                       placeholder="Your full name"
                     />
                     {errors.chefName && (
@@ -119,8 +263,8 @@ const CreateMeal = () => {
                           required: "Price is required",
                           valueAsNumber: true,
                           min: {
-                            value: 0,
-                            message: "Price must be positive",
+                            value: 1,
+                            message: "Price must be greater than 0",
                           },
                         })}
                         className="w-full rounded-lg border border-base-300 bg-base-200 pl-7 pr-3.5 py-2.5 text-base text-neutral-content placeholder-slate-500 outline-none focus:border-base-300 focus:ring-2 focus:ring-base-300 transition"
@@ -130,59 +274,6 @@ const CreateMeal = () => {
                     {errors.price && (
                       <p className="text-xs text-rose-400">
                         {errors.price.message}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                {/* Rating & Estimated Delivery Time */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="block text-xs font-medium tracking-tight text-neutral-content">
-                      Rating
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="number"
-                        step="0.1"
-                        min="0"
-                        max="5"
-                        {...register("rating", {
-                          valueAsNumber: true,
-                          min: { value: 0, message: "Min rating is 0" },
-                          max: { value: 5, message: "Max rating is 5" },
-                        })}
-                        className="w-full rounded-lg border border-base-300 bg-base-200 pl-8 pr-3.5 py-2.5 text-base text-neutral-content placeholder-slate-500 outline-none focus:border-base-300 focus:ring-2 focus:ring-base-300 transition"
-                        placeholder="4.8"
-                      />
-                    </div>
-                    {errors.rating && (
-                      <p className="text-xs text-rose-400">
-                        {errors.rating.message}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <label className="block text-xs font-medium tracking-tight text-neutral-content">
-                      Estimated Delivery Time
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="text"
-                        {...register("estimatedDeliveryTime", {
-                          required: "Estimated delivery time is required",
-                        })}
-                        className="w-full rounded-lg border border-base-300 bg-base-200 pl-3.5 pr-10 py-2.5 text-base text-neutral-content placeholder-slate-500 outline-none focus:border-base-300 focus:ring-2 focus:ring-base-300 transition"
-                        placeholder="e.g. 30–40 min"
-                      />
-                      <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-[0.7rem] text-neutral-content0">
-                        mins
-                      </span>
-                    </div>
-                    {errors.estimatedDeliveryTime && (
-                      <p className="text-xs text-rose-400">
-                        {errors.estimatedDeliveryTime.message}
                       </p>
                     )}
                   </div>
@@ -221,7 +312,7 @@ const CreateMeal = () => {
                   Account & Submission
                 </h2>
                 <p className="mt-1 text-base text-slate-400">
-                  Your email and chef ID help us link meals to your profile.
+                  Your email help us link meals to your profile.
                 </p>
               </div>
               <div className="px-5 sm:px-6 py-5 space-y-5">
@@ -233,18 +324,10 @@ const CreateMeal = () => {
                     <div className="relative">
                       <input
                         type="email"
-                        {...register("userEmail")}
                         readOnly
-                        className="w-full rounded-lg border border-base-300 bg-base-200 px-3.5 py-2.5 text-base text-slate-400 outline-none cursor-not-allowed"
+                        value={dbUser.email}
+                        className="w-full rounded-lg border border-base-300 bg-base-200 px-3.5 py-2.5 text-slate-400 outline-none cursor-not-allowed"
                       />
-                      <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
-                        <span
-                          className="iconify text-neutral-content0"
-                          data-icon="lucide:lock"
-                          data-width="16"
-                          data-height="16"
-                        ></span>
-                      </span>
                     </div>
                     <p className="text-xs text-neutral-content0">
                       This email is linked to your user account.
@@ -253,17 +336,21 @@ const CreateMeal = () => {
 
                   <div className="space-y-1.5">
                     <label className="block text-xs font-medium tracking-tight text-neutral-content">
-                      Chef ID
+                      Estimated Delivery Time
                     </label>
                     <input
                       type="text"
-                      {...register("chefId")}
+                      {...register("estimatedDeliveryTime", {
+                        required: "Delivery time is required",
+                      })}
                       className="w-full rounded-lg border border-base-300 bg-base-200 px-3.5 py-2.5 text-base text-neutral-content placeholder-slate-500 outline-none focus:border-base-300 focus:ring-2 focus:ring-base-300 transition"
-                      placeholder="Assigned after admin approval"
+                      placeholder="e.g. 30 minutes"
                     />
-                    <p className="text-xs text-neutral-content0">
-                      Use the ID provided by the admin. Leave blank if pending.
-                    </p>
+                    {errors.estimatedDeliveryTime && (
+                      <p className="text-xs text-rose-400">
+                        {errors.estimatedDeliveryTime.message}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -272,11 +359,26 @@ const CreateMeal = () => {
                     Chef’s Experience
                   </label>
                   <textarea
-                    {...register("chefExperience")}
+                    {...register("chefExperience", {
+                      required: "Chef experience is required",
+                      min: {
+                        value: 0,
+                        message: "Experience cannot be negative",
+                      },
+                      max: {
+                        value: 50,
+                        message: "Experience seems unrealistic",
+                      },
+                    })}
                     rows={3}
                     className="w-full rounded-lg border border-base-300 bg-base-200 px-3.5 py-2.5 text-base text-neutral-content placeholder-slate-500 outline-none focus:border-base-300 focus:ring-2 focus:ring-base-300 transition resize-none"
                     placeholder="Describe your cooking background, specialties, or years of experience..."
                   ></textarea>
+                  {errors.chefExperience && (
+                    <p className="text-xs text-rose-400">
+                      {errors.chefExperience.message}
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2">
@@ -286,9 +388,10 @@ const CreateMeal = () => {
                   </p>
                   <button
                     type="submit"
+                    disabled={isLoading}
                     className="inline-flex items-center justify-center rounded-lg bg-primary px-4 sm:px-5 py-2.5 text-sm font-medium tracking-tight text-neutral-content shadow-xl/30 hover:bg-primary/70  transition cursor-pointer"
                   >
-                    Create Meal
+                    {isLoading ? <span className="loading loading-spinner loading-sm"></span> : "Create Meal"}
                   </button>
                 </div>
               </div>
@@ -297,76 +400,6 @@ const CreateMeal = () => {
 
           {/* Right column */}
           <div className="space-y-6">
-            {/* Image upload */}
-            <div className="rounded-2xl border border-base-300 bg-base-100 shadow-[0_18px_60px_-30px_rgba(15,23,42,0.9)] backdrop-blur">
-              <div className="border-b border-base-300 px-5 sm:px-6 py-4">
-                <h2 className="text-lg font-semibold tracking-tight text-neutral-content">
-                  Food Image
-                </h2>
-                <p className="mt-1 text-base text-slate-400">
-                  Upload a high-quality photo of the meal.
-                </p>
-              </div>
-
-              <div className="px-5 sm:px-6 py-5 space-y-4">
-                <label className="block">
-                  <span className="block text-xs font-medium tracking-tight text-neutral-content mb-2">
-                    Image Upload
-                  </span>
-                  <div className="relative flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-700 bg-base-200 px-4 py-6 text-center cursor-pointer hover:border-base-300 hover:bg-base-100 transition">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      // onChange={handleFileChange}
-                      className="absolute inset-0 h-full w-full opacity-0 cursor-pointer"
-                    />
-                    <div className="flex flex-col items-center gap-2">
-                      <div className="text-xs text-slate-300">
-                        <span className="font-medium">Click to upload</span> or
-                        drag &amp; drop
-                      </div>
-                      <p className="text-xs text-neutral-content0">
-                        JPG, PNG up to 5MB
-                      </p>
-                    </div>
-                  </div>
-                </label>
-
-                {/* {previewUrl && (
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-medium tracking-tight text-neutral-content">
-                          Preview
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setPreviewUrl(null);
-                            setImageFile(null);
-                          }}
-                          className="inline-flex items-center gap-1 rounded-full border border-slate-700 bg-slate-900/80 px-2 py-1 text-[0.7rem] text-slate-300 hover:bg-slate-800/80 transition"
-                        >
-                          <span
-                            className="iconify"
-                            data-icon="lucide:x"
-                            data-width="14"
-                            data-height="14"
-                          ></span>
-                          Remove
-                        </button>
-                      </div>
-                      <div className="overflow-hidden rounded-xl border border-base-300 bg-slate-950">
-                        <img
-                          src={previewUrl}
-                          alt="Food preview"
-                          className="w-full h-40 sm:h-52 object-cover"
-                        />
-                      </div>
-                    </div>
-                  )} */}
-              </div>
-            </div>
-
             {/* Helper card */}
             <div className="rounded-2xl border border-base-300 bg-base-100 backdrop-blur">
               <div className="px-5 sm:px-6 py-4">
