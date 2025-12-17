@@ -215,7 +215,7 @@ const DashboardLayout = () => {
           </div>
         </div>
         {/* SIDEBAR */}
-        <div className="hidden md:block lg:block w-64 bg-base-200 border-r border-r-base-100 py-5 min-h-screen relative">
+        <div className="hidden md:block lg:block w-64 bg-base-200 border-r border-r-base-100 py-5 min-h-screen h-full relative">
           <div>
             {(dbUser?.role === "user" && userMenu) ||
               (dbUser?.role === "chef-pending" && userMenu)}

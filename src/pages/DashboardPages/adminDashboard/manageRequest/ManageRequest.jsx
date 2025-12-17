@@ -123,7 +123,7 @@ const ManageRequest = () => {
                           <th>Email</th>
                           <th>Request status</th>
                           <th>Requested Time</th>
-                          <th>Decision</th>
+                          <th>Action</th>
                         </tr>
                       </thead>
                       <tbody className="space-y-15">

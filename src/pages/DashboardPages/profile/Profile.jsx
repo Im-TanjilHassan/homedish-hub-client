@@ -46,6 +46,8 @@ const Profile = () => {
     }
   };
 
+  
+
   return (
     <div className="min-h-screen bg-base-200 rounded-2xl flex justify-center px-4 py-10">
       <div className="w-full max-w-5xl space-y-6">
@@ -83,7 +85,13 @@ const Profile = () => {
                 {user.displayName}
               </h2>
               <p className="mt-0.5 text-base text-emerald-700 font-semibold">
-                {dbUser.role}
+                {
+                  dbUser.role === "user" && dbUser.role 
+                }
+                {
+                  dbUser.role === "chef" && `chefId: ${dbUser.chefId}`
+                }
+                
               </p>
               <p className="mt-0.5 text-sm md:text-base text-gray-500">
                 {dbUser.address}
