@@ -62,6 +62,7 @@ const Navbar = () => {
       </NavLink>
       <Link
         to="/login"
+        hidden={user}
         className="md:hidden flex justify-center items-center gap-2 cursor-pointer font-bold px-3 py-2"
       >
         <LuLogIn />
@@ -69,6 +70,7 @@ const Navbar = () => {
       </Link>
       <Link
         to="/register"
+        hidden={user}
         className="md:hidden flex justify-center items-center gap-2 cursor-pointer font-bold px-3 py-2"
       >
         <SiGnuprivacyguard />
@@ -102,7 +104,7 @@ const Navbar = () => {
           </div>
           <ul
             tabIndex="-1"
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-5 w-100 border ml-auto p-2 shadow space-y-5"
+            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-5 w-100 ml-auto p-2 shadow space-y-5 bg-base-200"
           >
             {menu}
           </ul>
@@ -110,10 +112,10 @@ const Navbar = () => {
         <div className="flex justify-center items-center gap-3">
           <img src={logo} className="w-8 h-8" alt="" />
 
-          <a className="text-xl font-bold text-primary">
+          <Link to="/" className="text-xl font-bold text-primary cursor-pointer">
             HomeDish
             <span className="text-neutral-content">-Hub</span>
-          </a>
+          </Link>
         </div>
       </div>
       <div className="navbar-center hidden lg:flex">

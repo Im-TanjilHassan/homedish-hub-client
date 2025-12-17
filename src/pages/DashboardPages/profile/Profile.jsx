@@ -60,7 +60,7 @@ const Profile = () => {
         </header>
 
         {/* Profile Summary Card */}
-        <section className="bg-base-100 backdrop-blur-sm shadow-sm rounded-2xl md:rounded-3xl p-4 md:p-6 flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6 transform transition duration-300 hover:shadow-md hover:-translate-y-0.5">
+        <section className="bg-base-100 backdrop-blur-sm shadow-sm rounded-2xl md:rounded-3xl p-4 md:p-6 flex items-start md:items-center gap-4 md:gap-6 transform transition duration-300 hover:shadow-md hover:-translate-y-0.5">
           <div className="flex items-center gap-4 md:gap-6">
             <div className="relative">
               {user.photoURL ? (
@@ -93,9 +93,9 @@ const Profile = () => {
 
           <div className="flex-1" />
 
-          <button className="inline-flex items-center justify-center rounded-full bg-primary text-white text-sm md:text-base font-medium px-4 py-2 shadow-sm hover:bg-primary/80 gap-2 cursor-pointer">
+          <button className="inline-flex items-center justify-center rounded-full md:bg-primary text-white text-xs md:text-base font-medium md:px-4 md:py-2 shadow-sm hover:bg-primary/80 gap-2 cursor-pointer">
             <FaEdit />
-            <span>Edit Profile</span>
+            <span className="hidden md:block lg:block">Edit Profile</span>
           </button>
         </section>
 
@@ -106,9 +106,9 @@ const Profile = () => {
               Personal Information
             </h3>
             <div className="flex-1" />
-            <button className="inline-flex items-center justify-center rounded-full bg-primary text-white text-xs md:text-sm font-medium px-3 py-1 gap-1 hover:bg-primary/80 transition cursor-pointer">
+            <button className="inline-flex items-center justify-center rounded-full md:bg-primary text-white text-xs md:text-sm font-medium px-3 py-1 gap-1 hover:bg-primary/80 transition cursor-pointer">
               <FaEdit />
-              <span>Edit</span>
+              <span className="hidden md:block lg:block">Edit</span>
             </button>
           </div>
 

@@ -11,62 +11,114 @@ import MyReview from "../pages/DashboardPages/myReview/MyReview";
 import FavoriteMeal from "../pages/DashboardPages/fvrtMeal/FavoriteMeal";
 import PrivateRoute from "./PrivateRoute";
 import ManageRequest from "../pages/DashboardPages/adminDashboard/manageRequest/ManageRequest";
+import CreateMeal from "../pages/DashboardPages/CHEF_dashboard/CREATE_Meal/CreateMeal";
+import RoleRoute from "./RoleRoute";
+import MyMeal from "../pages/DashboardPages/CHEF_dashboard/MY_Meal/MyMeal";
+import Order from "../pages/DashboardPages/CHEF_dashboard/ORDER_Requests/Order";
+import ManageUser from "../pages/DashboardPages/adminDashboard/manageUser/ManageUser";
+import PlatformStatics from "../pages/DashboardPages/adminDashboard/platformStatics/PlatformStatics";
 
 export const router = createBrowserRouter([
-    {
-        path: '/',
-        Component: MainLayout,
-        children: [
-            {
-                index: true,
-                element: <Home></Home>
-            },
-            {
-                path: '/meals',
-                element: <Meals></Meals>
-            },
-            {
-                path: '/login',
-                element: <Login></Login>
-            },
-            {
-                path: '/register',
-                element: <Register></Register>
-            },
-        ]
-    },
-    {
-        path: "/dashboard",
+  {
+    path: "/",
+    Component: MainLayout,
+    children: [
+      {
+        index: true,
+        element: <Home></Home>,
+      },
+      {
+        path: "/meals",
+        element: <Meals></Meals>,
+      },
+      {
+        path: "/login",
+        element: <Login></Login>,
+      },
+      {
+        path: "/register",
+        element: <Register></Register>,
+      },
+    ],
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <PrivateRoute>
+        <DashboardLayout></DashboardLayout>
+      </PrivateRoute>
+    ),
+    children: [
+      {
+        index: true,
+        Component: Profile,
+      },
+      {
+        path: "profile",
+        Component: Profile,
+      },
+      {
+        path: "myOrder",
+        Component: MyOrder,
+      },
+      {
+        path: "myReview",
+        Component: MyReview,
+      },
+      {
+        path: "favoriteMeal",
+        Component: FavoriteMeal,
+      },
+      // chefs routes
+      {
+        path: "createMeal",
         element: (
-            <PrivateRoute>
-                <DashboardLayout ></DashboardLayout>
-            </PrivateRoute>
+          <RoleRoute allow={["chef", "admin"]}>
+            <CreateMeal></CreateMeal>
+          </RoleRoute>
         ),
-        children: [
-            {
-                index: true,
-                Component: Profile
-            },
-            {
-                path: "profile",
-                Component: Profile
-            },
-            {
-                path: "myOrder",
-                Component: MyOrder
-            },
-            {
-                path: "myReview",
-                Component: MyReview
-            },
-            {
-                path: "favoriteMeal",
-                Component: FavoriteMeal
-            },
-            {
-                path: "manageRequest",
-                Component: ManageRequest
-            },
-        ]
-    }
-])
+      },
+      {
+        path: "myMeal",
+        element: (
+          <RoleRoute allow={["chef", "admin"]}>
+            <MyMeal></MyMeal>
+          </RoleRoute>
+        ),
+      },
+      {
+        path: "order",
+        element: (
+          <RoleRoute allow={["chef", "admin"]}>
+            <Order></Order>
+          </RoleRoute>
+        ),
+      },
+      //admin routes
+      {
+        path: "manageUsers",
+        element: (
+          <RoleRoute allow={["admin"]}>
+            <ManageUser></ManageUser>
+          </RoleRoute>
+        ),
+      },
+      {
+        path: "manageRequest",
+        element: (
+          <RoleRoute allow={["admin"]}>
+            <ManageRequest></ManageRequest>
+          </RoleRoute>
+        ),
+      },
+      {
+        path: "platformStatics",
+        element: (
+          <RoleRoute allow={["admin"]}>
+            <PlatformStatics></PlatformStatics>
+          </RoleRoute>
+        ),
+      },
+    ],
+  },
+]);

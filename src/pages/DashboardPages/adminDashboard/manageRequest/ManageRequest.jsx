@@ -1,13 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import RequestTable from './requestTable/RequestTable';
 import { useQuery } from '@tanstack/react-query';
 import axiosSecure from '../../../../api/axiosSecure';
 import Swal from 'sweetalert2';
+import { AuthContext } from '../../../../providers/AuthProvider';
+import { MdOutlineSearchOff } from "react-icons/md";
 
 const ManageRequest = () => {
+  const { dbUser } = useContext(AuthContext);
 
-    const { data: pendingChefs = [], refetch, isLoading, isError, error } = useQuery({
+    const { data: pendingChefs = [], refetch, isLoading } = useQuery({
       queryKey: ["pendingChefs"],
+      enabled: dbUser?.role === "admin",
       retry: false,
       queryFn: async () => {
         const res = await axiosSecure.get("/chefRequests");
@@ -17,11 +21,6 @@ const ManageRequest = () => {
 
   if (isLoading) {
      return <p>Loading...</p>;
-  }
-
-  if (isError) {
-    console.log(error);
-    return <p>Error loading chef request</p>
   }
   
   // console.log(pendingChefs);
@@ -113,28 +112,41 @@ const ManageRequest = () => {
               <h2 className="text-lg md:text-xl font-semibold tracking-tight text-primary pb-5 mb-5 border-b">
                 Chef Request's
               </h2>
-              <table className="table">
-                {/* head */}
-                <thead className="text-center">
-                  <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Request status</th>
-                    <th>Requested Time</th>
-                    <th>Decision</th>
-                  </tr>
-                </thead>
-                <tbody className="space-y-15">
-                  {pendingChefs.map((pendingData) => (
-                    <RequestTable
-                      key={pendingChefs._id}
-                      pendingData={pendingData}
-                      handleAcceptReq={handleAcceptReq}
-                      handleRejectReq={handleRejectReq}
-                    ></RequestTable>
-                  ))}
-                </tbody>
-              </table>
+              <div>
+                {pendingChefs.length ? (
+                  <div>
+                    <table className="table">
+                      {/* head */}
+                      <thead className="text-center">
+                        <tr>
+                          <th>Name</th>
+                          <th>Email</th>
+                          <th>Request status</th>
+                          <th>Requested Time</th>
+                          <th>Decision</th>
+                        </tr>
+                      </thead>
+                      <tbody className="space-y-15">
+                        {pendingChefs.map((pendingData) => (
+                          <RequestTable
+                            key={pendingChefs._id}
+                            pendingData={pendingData}
+                            handleAcceptReq={handleAcceptReq}
+                            handleRejectReq={handleRejectReq}
+                          ></RequestTable>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <div className="w-full p-10 text-primary/50 font-bold flex justify-center ">
+                    <div>
+                      <MdOutlineSearchOff className="text-5xl mx-auto" />{" "}
+                      <h2 className="text-2xl">No Request Found</h2>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </section>
 
