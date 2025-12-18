@@ -17,6 +17,7 @@ import MyMeal from "../pages/DashboardPages/CHEF_dashboard/MY_Meal/MyMeal";
 import Order from "../pages/DashboardPages/CHEF_dashboard/ORDER_Requests/Order";
 import ManageUser from "../pages/DashboardPages/adminDashboard/manageUser/ManageUser";
 import PlatformStatics from "../pages/DashboardPages/adminDashboard/platformStatics/PlatformStatics";
+import MealDetails from "../pages/Meals/mealDetails/MealDetails";
 
 export const router = createBrowserRouter([
   {
@@ -30,6 +31,12 @@ export const router = createBrowserRouter([
       {
         path: "/meals",
         element: <Meals></Meals>,
+      },
+      {
+        path: "/meals/:id",
+        element: <PrivateRoute>
+          <MealDetails></MealDetails>
+        </PrivateRoute>,
       },
       {
         path: "/login",

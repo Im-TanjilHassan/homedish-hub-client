@@ -111,7 +111,12 @@ const CreateMeal = () => {
           </div>
         </div>
 
-        <form
+        {
+          dbUser.status === "fraud" ? (<div className="w-full min-h-screen flex items-center justify-center">
+            <div className="text-center text-4xl">
+              <h2>You Are A Fraud!</h2>
+            </div>
+          </div>) : (<form
           onSubmit={handleSubmit(onSubmitForm)}
           className="grid gap-6 lg:grid-cols-[minmax(0,2fr),minmax(0,1.3fr)]"
         >
@@ -425,7 +430,8 @@ const CreateMeal = () => {
               </div>
             </div>
           </div>
-        </form>
+        </form>)
+        }
       </div>
     </div>
   );

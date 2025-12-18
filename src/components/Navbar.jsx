@@ -3,12 +3,12 @@ import { IoHome } from "react-icons/io5";
 import { GiHotMeal } from "react-icons/gi";
 import { LuLogIn } from "react-icons/lu";
 import { SiGnuprivacyguard } from "react-icons/si";
-import logo from '../assets/logo.png'
 import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../providers/AuthProvider";
 import ThemeToggle from "./ThemeToggle";
 import { BiSolidDashboard } from "react-icons/bi";
 import { MdLogout } from "react-icons/md";
+import { SiCodechef } from "react-icons/si";
 
 
 
@@ -17,9 +17,6 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [locked, setLocked] = useState(false);
   const dropdownRef = useRef(null);
-
-  console.log(user);
-  
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -78,8 +75,6 @@ const Navbar = () => {
       </Link>
     </>
   );
-
-  console.log(user);
   
   return (
     <div className="lg:w-7xl mx-auto navbar bg-base-100 lg:mt-6 rounded-4xl shadow-xl/30 lg:px-6 mb-10">
@@ -110,9 +105,12 @@ const Navbar = () => {
           </ul>
         </div>
         <div className="flex justify-center items-center gap-3">
-          <img src={logo} className="w-8 h-8" alt="" />
+          <SiCodechef className="text-2xl"/>
 
-          <Link to="/" className="text-xl font-bold text-primary cursor-pointer">
+          <Link
+            to="/"
+            className="text-xl font-bold text-primary cursor-pointer"
+          >
             HomeDish
             <span className="text-neutral-content">-Hub</span>
           </Link>
@@ -169,7 +167,7 @@ const Navbar = () => {
 
                   <li>
                     <button
-                      onClick={async() => {
+                      onClick={async () => {
                         await logOut();
                         setOpen(false);
                         setLocked(false);

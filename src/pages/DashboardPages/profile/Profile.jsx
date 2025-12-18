@@ -76,8 +76,8 @@ const Profile = () => {
                   </span>
                 </div>
               )}
-              <span className="absolute -bottom-0.5 -right-0.5 h-5 w-5 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center">
-                <i data-lucide="check" className="w-3 h-3 text-white"></i>
+              <span className={`absolute -bottom-0.5 -right-0.5 h-5 w-5 rounded-full ${dbUser.status === "fraud" ? "bg-red-700" : "bg-green-700"} border-2 border-white flex items-center justify-center`}>
+                {/* <i data-lucide="check" className="w-3 h-3 text-white"></i> */}
               </span>
             </div>
             <div>
