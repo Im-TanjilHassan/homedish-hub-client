@@ -10,6 +10,7 @@ import ReviewCard from "../../../components/ReviewCard";
 const MealDetails = () => {
   const { id } = useParams();
   const { dbUser } = useContext(AuthContext);
+  //fetch single meal
   const { data: meal, isLoading } = useQuery({
     queryKey: ["meal", id],
     queryFn: async () => {
@@ -19,11 +20,19 @@ const MealDetails = () => {
     enabled: !!id,
   });
 
-  if (isLoading) {
-    return <div>Loading meal details...</div>;
-  }
+  //fetch reviews
+  const { data: reviews = [], } = useQuery({
+    queryKey: ["reviews", id],
+    queryFn: async () => {
+      const res = await axiosPublic.get(`/reviews?foodId=${id}`);
+      return res.data;
+    },
+    enabled: !!id,
+  });
 
-  console.log("meal: ", meal);
+  if (isLoading) {
+    return <p className="text-center text-gray-500">Loading...</p>;
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
@@ -108,12 +117,20 @@ const MealDetails = () => {
         <section className="mt-16">
           <h2 className="text-2xl font-bold mb-8">Reviews</h2>
 
-          <GiveReview mealId={id}></GiveReview>
+          <GiveReview id={id}></GiveReview>
           {/* Reviews List */}
           <h3 className="text-xl font-semibold mb-6">What Others Are Saying</h3>
-          <div className="space-y-6">
-            <ReviewCard></ReviewCard>
-          </div>
+          {reviews.length ? (
+            <div className="space-y-6 md:grid md:grid-cols-3">
+              {reviews.map((review) => (
+                <ReviewCard key={review._id} review={review}></ReviewCard>
+              ))}
+            </div>
+          ) : (
+            <div>
+              <h2 className="text-gray-500 text-2xl">No Review Found</h2>
+            </div>
+          )}
         </section>
       </div>
     </div>
