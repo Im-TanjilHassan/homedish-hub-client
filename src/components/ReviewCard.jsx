@@ -2,7 +2,7 @@ import { format } from "date-fns";
 const ReviewCard = ({ review }) => {
   const { reviewerName, reviewerImage, date, rating, comment } = review;
   return (
-    <div className="flex justify-center items-center gap-4 rounded-xl bg-base-200 shadow-xl/30 w-88 h-78">
+    <div className="flex justify-center items-center gap-4 rounded-xl bg-base-200 shadow-xl/30 md:w-88 md:h-78">
       {/* Reviewer Image */}
       <div className="p-5 space-y-5">
         <img

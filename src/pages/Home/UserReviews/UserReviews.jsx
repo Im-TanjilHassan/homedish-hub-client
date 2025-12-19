@@ -1,15 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 import axiosPublic from '../../../api/axiosPublic';
+import Carousel from '../../../components/carousel';
 
 const UserReviews = () => {
     const { data: reviews = [], isLoading } = useQuery({
       queryKey: ["homeReviews"],
       queryFn: async () => {
-        const res = await axiosPublic.get("/reviews");
-        return res.data.slice(0, 6);
+        const res = await axiosPublic.get("/allReview");
+        return res.data.slice(0, 5);
       },
     });
+  
+    console.log("from home review", reviews);
+    
 
      if (isLoading) {
        return (
@@ -18,8 +22,6 @@ const UserReviews = () => {
          </div>
        );
     }
-    
-    console.log(reviews);
     
     return (
       <div className="mb-20">
@@ -30,6 +32,9 @@ const UserReviews = () => {
             <p className="text-gray-500 mt-2">
               Real reviews from people who ordered our meals
             </p>
+          </div>
+          <div>
+            <Carousel reviews={reviews}></Carousel>
           </div>
         </div>
       </div>

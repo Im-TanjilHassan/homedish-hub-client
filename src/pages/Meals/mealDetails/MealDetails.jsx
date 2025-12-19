@@ -104,22 +104,22 @@ const MealDetails = () => {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-4 pt-4">
-            <button className="btn btn-primary">Order Now</button>
+          {dbUser.role === "user" && (
+            <div className="flex gap-4 pt-4">
+              <button className="btn btn-primary">Order Now</button>
 
-            <button className="btn btn-outline">Add to Favorite</button>
-          </div>
+              <button className="btn btn-outline">Add to Favorite</button>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Reviews Section Below */}
       <div className="mt-14">
         <section className="mt-16">
-          <h2 className="text-2xl font-bold mb-8">Reviews</h2>
-
-          <GiveReview id={id}></GiveReview>
+          <h2 className="text-2xl font-bold mb-8">What Others Are Saying</h2>
+          {dbUser.role === "user" && <GiveReview id={id}></GiveReview>}
           {/* Reviews List */}
-          <h3 className="text-xl font-semibold mb-6">What Others Are Saying</h3>
           {reviews.length ? (
             <div className="space-y-6 md:grid md:grid-cols-3">
               {reviews.map((review) => (
