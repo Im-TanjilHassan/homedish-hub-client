@@ -1,8 +1,9 @@
-import React, { useContext } from 'react';
-import Swal from 'sweetalert2';
-import axiosSecure from "../../../../api/axiosSecure"
-import { AuthContext } from "../../../../providers/AuthProvider"
+import React, { useContext } from "react";
+import Swal from "sweetalert2";
+import axiosSecure from "../../../../api/axiosSecure";
+import { AuthContext } from "../../../../providers/AuthProvider";
 import { useQueryClient } from "@tanstack/react-query";
+import { Link } from "react-router";
 
 const ReviewTable = ({ review, index, handleEditClick }) => {
   const { user } = useContext(AuthContext);
@@ -52,7 +53,6 @@ const ReviewTable = ({ review, index, handleEditClick }) => {
   return (
     <tr className="hover">
       <td>{index + 1}</td>
-
       <td className="font-medium">{review.foodName}</td>
 
       {/* Rating */}

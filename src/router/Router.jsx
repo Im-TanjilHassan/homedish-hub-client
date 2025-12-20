@@ -34,9 +34,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "/meals/:id",
-        element: <PrivateRoute>
-          <MealDetails></MealDetails>
-        </PrivateRoute>,
+        element: (
+          <PrivateRoute>
+            <MealDetails></MealDetails>
+          </PrivateRoute>
+        ),
       },
       {
         path: "/login",
@@ -66,21 +68,33 @@ export const router = createBrowserRouter([
       },
       {
         path: "myOrder",
-        Component: MyOrder,
+        element: (
+          <RoleRoute allow={["user"]}>
+            <MyOrder></MyOrder>
+          </RoleRoute>
+        ),
       },
       {
         path: "myReview",
-        Component: MyReview,
+        element: (
+          <RoleRoute allow={["user"]}>
+            <MyReview></MyReview>
+          </RoleRoute>
+        ),
       },
       {
         path: "favoriteMeal",
-        Component: FavoriteMeal,
+        element: (
+          <RoleRoute allow={["user"]}>
+            <FavoriteMeal></FavoriteMeal>
+          </RoleRoute>
+        ),
       },
       // chefs routes
       {
         path: "createMeal",
         element: (
-          <RoleRoute allow={["chef", "admin"]}>
+          <RoleRoute allow={["chef"]}>
             <CreateMeal></CreateMeal>
           </RoleRoute>
         ),
@@ -88,7 +102,7 @@ export const router = createBrowserRouter([
       {
         path: "myMeal",
         element: (
-          <RoleRoute allow={["chef", "admin"]}>
+          <RoleRoute allow={["chef"]}>
             <MyMeal></MyMeal>
           </RoleRoute>
         ),
@@ -96,7 +110,7 @@ export const router = createBrowserRouter([
       {
         path: "order",
         element: (
-          <RoleRoute allow={["chef", "admin"]}>
+          <RoleRoute allow={["chef"]}>
             <Order></Order>
           </RoleRoute>
         ),

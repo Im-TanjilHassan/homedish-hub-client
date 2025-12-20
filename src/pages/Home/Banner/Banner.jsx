@@ -7,12 +7,42 @@ import image3 from "../../../assets/banner/banner3-removebg-preview.png";
 import bannerBg from "../../../assets/banner/banner-bg-removebg-preview.png";
 import { SiCodechef } from "react-icons/si";
 import { AuthContext } from "../../../providers/AuthProvider";
+import { Link } from "react-router";
 
 const images = [image1, image2, image3];
 
 const Banner = () => {
-    const [currentImage, setCurrentImage] = useState(0);
-    const {dbUser} = useContext(AuthContext)
+  const [currentImage, setCurrentImage] = useState(0);
+  const { dbUser } = useContext(AuthContext);
+
+  const roleConfigBtnOne = {
+    chef: {
+      text: "Create Meal",
+      route: "/dashboard/createMeal",
+    },
+    admin: {
+      text: "Manage Users",
+      route: "/dashboard/manageUsers",
+    },
+    user: {
+      text: "Order",
+      route: "/dashboard/myOrder",
+    },
+  };
+  const roleConfigBtnTwo = {
+    chef: {
+      text: "Order Request",
+      route: "/dashboard/order",
+    },
+    admin: {
+      text: "Platform Statistics",
+      route: "/dashboard/platformStatics",
+    },
+    user: {
+      text: "Favorite Meal",
+      route: "/dashboard/favoriteMeal",
+    },
+  };
 
   /* Image carousel (fade) */
   useEffect(() => {
@@ -65,7 +95,8 @@ const Banner = () => {
 
         {/* CTA Buttons */}
         <div className="flex flex-wrap gap-4 mt-8">
-          <button
+          <Link
+            to={roleConfigBtnOne[dbUser?.role]?.route || "/Order"}
             className="
               px-8 py-3 rounded-xl 
               bg-primary text-white font-semibold
@@ -76,10 +107,11 @@ const Banner = () => {
               active:translate-y-0 cursor-pointer
             "
           >
-            Order Now
-          </button>
+            {roleConfigBtnOne[dbUser?.role]?.text || "Order"}
+          </Link>
 
-          <button
+          <Link
+            to={roleConfigBtnTwo[dbUser?.role]?.route || "/favoriteMeal"}
             className="
               px-8 py-3 rounded-xl 
               border-2 border-primary text-primary font-semibold
@@ -92,8 +124,8 @@ const Banner = () => {
             "
           >
             <SiCodechef />
-            {dbUser?.role === "chef" || dbUser?.role === "admin" ? "Create Meal" : "Become A Chef"}
-          </button>
+            {roleConfigBtnTwo[dbUser?.role]?.text || "favoriteMeal"}
+          </Link>
         </div>
       </div>
 

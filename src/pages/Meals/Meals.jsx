@@ -29,8 +29,6 @@ const Meals = () => {
       meal.foodName.toLowerCase().includes(search.toLowerCase())
     );
 
-  console.log(meals);
-
   return (
     <section className="mb-20">
       {/* Title & Description */}

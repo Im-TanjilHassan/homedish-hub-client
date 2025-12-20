@@ -4,6 +4,16 @@ import logo from "../../assets/logo.png";
 import { AuthContext } from "../../providers/AuthProvider";
 import { MdLogout } from "react-icons/md";
 import ThemeToggle from "../../components/ThemeToggle";
+import { FaRegUser } from "react-icons/fa";
+import { FiShoppingCart } from "react-icons/fi";
+import { MdOutlineReviews } from "react-icons/md";
+import { MdFavoriteBorder } from "react-icons/md";
+import { FaUserPen } from "react-icons/fa6";
+import { VscRequestChanges } from "react-icons/vsc";
+import { SiStatista } from "react-icons/si";
+import { IoCreateOutline } from "react-icons/io5";
+import { GiHotMeal } from "react-icons/gi";
+import { CiViewList } from "react-icons/ci";
 
 const DashboardLayout = () => {
   const { logOut, dbUser, user, loading } = useContext(AuthContext);
@@ -14,7 +24,7 @@ const DashboardLayout = () => {
         <NavLink
           to="profile"
           className={({ isActive }) =>
-            `w-full block px-4 py-2 transition text-neutral-content font-semibold hover:bg-base-300 hover:rounded-l-2xl hover:shadow-xl/30 hover:font-bold
+            `w-full flex justify-start items-center gap-3 px-4 py-2 transition text-neutral-content font-semibold hover:bg-base-300 hover:rounded-l-2xl hover:shadow-xl/30 hover:font-bold
      ${
        isActive
          ? "bg-base-300 rounded-l-2xl text-neutral-content shadow-xl/30"
@@ -22,6 +32,7 @@ const DashboardLayout = () => {
      }`
           }
         >
+          <FaRegUser />
           My Profile
         </NavLink>
       </li>
@@ -29,10 +40,11 @@ const DashboardLayout = () => {
         <NavLink
           to="manageUsers"
           className={({ isActive }) =>
-            `w-full block px-4 py-2 transition text-neutral-content font-semibold hover:bg-base-300 hover:rounded-l-2xl hover:shadow-xl/30 hover:font-bold
+            `w-full flex justify-start items-center gap-3 px-4 py-2 transition text-neutral-content font-semibold hover:bg-base-300 hover:rounded-l-2xl hover:shadow-xl/30 hover:font-bold
      ${isActive ? "bg-base-300 rounded-l-2xl shadow-xl/30" : "text-gray-300"}`
           }
         >
+          <FaUserPen />
           Manage User
         </NavLink>
       </li>
@@ -41,10 +53,11 @@ const DashboardLayout = () => {
         <NavLink
           to="manageRequest"
           className={({ isActive }) =>
-            `w-full block px-4 py-2 transition text-neutral-content font-semibold hover:bg-base-300 hover:rounded-l-2xl hover:shadow-xl/30 hover:font-bold 
+            `w-full flex justify-start items-center gap-3 px-4 py-2 transition text-neutral-content font-semibold hover:bg-base-300 hover:rounded-l-2xl hover:shadow-xl/30 hover:font-bold 
      ${isActive ? "bg-base-300 rounded-l-2xl shadow-xl/30" : "text-gray-300"}`
           }
         >
+          <VscRequestChanges />
           Manage Request
         </NavLink>
       </li>
@@ -53,10 +66,11 @@ const DashboardLayout = () => {
         <NavLink
           to="platformStatics"
           className={({ isActive }) =>
-            `w-full block px-4 py-2 transition text-neutral-content font-semibold hover:bg-base-300 hover:rounded-l-2xl hover:shadow-xl/30 hover:font-bold 
+            `w-full flex justify-start items-center gap-3 px-4 py-2 transition text-neutral-content font-semibold hover:bg-base-300 hover:rounded-l-2xl hover:shadow-xl/30 hover:font-bold 
      ${isActive ? "bg-base-300 rounded-l-2xl shadow-xl/30" : "text-gray-300"}`
           }
         >
+          <SiStatista />
           Platform Statistics
         </NavLink>
       </li>
@@ -69,7 +83,7 @@ const DashboardLayout = () => {
         <NavLink
           to="profile"
           className={({ isActive }) =>
-            `w-full block px-4 py-2 transition text-neutral-content font-semibold hover:bg-base-300 hover:rounded-l-2xl hover:shadow-xl/30 hover:font-bold
+            `w-full flex justify-start items-center gap-3 px-4 py-2 transition text-neutral-content font-semibold hover:bg-base-300 hover:rounded-l-2xl hover:shadow-xl/30 hover:font-bold
      ${
        isActive
          ? "bg-base-300 rounded-l-2xl text-neutral-content shadow-xl/30"
@@ -77,6 +91,7 @@ const DashboardLayout = () => {
      }`
           }
         >
+          <FaRegUser />
           My Profile
         </NavLink>
       </li>
@@ -85,10 +100,11 @@ const DashboardLayout = () => {
         <NavLink
           to="myOrder"
           className={({ isActive }) =>
-            `w-full block px-4 py-2 transition text-neutral-content font-semibold hover:bg-base-300 hover:rounded-l-2xl hover:shadow-xl/30 hover:font-bold
+            `w-full flex justify-start items-center gap-3 px-4 py-2 transition text-neutral-content font-semibold hover:bg-base-300 hover:rounded-l-2xl hover:shadow-xl/30 hover:font-bold
      ${isActive ? "bg-base-300 rounded-l-2xl shadow-xl/30" : "text-gray-300"}`
           }
         >
+          <FiShoppingCart />
           My Orders
         </NavLink>
       </li>
@@ -97,10 +113,11 @@ const DashboardLayout = () => {
         <NavLink
           to="myReview"
           className={({ isActive }) =>
-            `w-full block px-4 py-2 transition text-neutral-content font-semibold hover:bg-base-300 hover:rounded-l-2xl hover:shadow-xl/30 hover:font-bold 
+            `w-full flex justify-start items-center gap-3 px-4 py-2 transition text-neutral-content font-semibold hover:bg-base-300 hover:rounded-l-2xl hover:shadow-xl/30 hover:font-bold 
      ${isActive ? "bg-base-300 rounded-l-2xl shadow-xl/30" : "text-gray-300"}`
           }
         >
+          <MdOutlineReviews />
           My Reviews
         </NavLink>
       </li>
@@ -109,10 +126,11 @@ const DashboardLayout = () => {
         <NavLink
           to="FavoriteMeal"
           className={({ isActive }) =>
-            `w-full block px-4 py-2 transition text-neutral-content font-semibold hover:bg-base-300 hover:rounded-l-2xl hover:shadow-xl/30 hover:font-bold 
+            `w-full flex justify-start items-center gap-3 px-4 py-2 transition text-neutral-content font-semibold hover:bg-base-300 hover:rounded-l-2xl hover:shadow-xl/30 hover:font-bold 
      ${isActive ? "bg-base-300 rounded-l-2xl shadow-xl/30" : "text-gray-300"}`
           }
         >
+          <MdFavoriteBorder />
           Favorite Meals
         </NavLink>
       </li>
@@ -125,7 +143,7 @@ const DashboardLayout = () => {
         <NavLink
           to="profile"
           className={({ isActive }) =>
-            `w-full block px-4 py-2 transition text-neutral-content font-semibold hover:bg-base-300 hover:rounded-l-2xl hover:shadow-xl/30 hover:font-bold
+            `w-full flex justify-start items-center gap-3 px-4 py-2 transition text-neutral-content font-semibold hover:bg-base-300 hover:rounded-l-2xl hover:shadow-xl/30 hover:font-bold
      ${
        isActive
          ? "bg-base-300 rounded-l-2xl text-neutral-content shadow-xl/30"
@@ -133,6 +151,7 @@ const DashboardLayout = () => {
      }`
           }
         >
+          <FaRegUser />
           My Profile
         </NavLink>
       </li>
@@ -140,10 +159,11 @@ const DashboardLayout = () => {
         <NavLink
           to="createMeal"
           className={({ isActive }) =>
-            `w-full block px-4 py-2 transition text-neutral-content font-semibold hover:bg-base-300 hover:rounded-l-2xl hover:shadow-xl/30 hover:font-bold
+            `w-full flex justify-start items-center gap-3 px-4 py-2 transition text-neutral-content font-semibold hover:bg-base-300 hover:rounded-l-2xl hover:shadow-xl/30 hover:font-bold
      ${isActive ? "bg-base-300 rounded-l-2xl shadow-xl/30" : "text-gray-300"}`
           }
         >
+          <IoCreateOutline />
           Create Meal
         </NavLink>
       </li>
@@ -152,10 +172,11 @@ const DashboardLayout = () => {
         <NavLink
           to="myMeal"
           className={({ isActive }) =>
-            `w-full block px-4 py-2 transition text-neutral-content font-semibold hover:bg-base-300 hover:rounded-l-2xl hover:shadow-xl/30 hover:font-bold 
+            `w-full flex justify-start items-center gap-3 px-4 py-2 transition text-neutral-content font-semibold hover:bg-base-300 hover:rounded-l-2xl hover:shadow-xl/30 hover:font-bold 
      ${isActive ? "bg-base-300 rounded-l-2xl shadow-xl/30" : "text-gray-300"}`
           }
         >
+          <GiHotMeal />
           My Meals
         </NavLink>
       </li>
@@ -164,10 +185,11 @@ const DashboardLayout = () => {
         <NavLink
           to="order"
           className={({ isActive }) =>
-            `w-full block px-4 py-2 transition text-neutral-content font-semibold hover:bg-base-300 hover:rounded-l-2xl hover:shadow-xl/30 hover:font-bold 
+            `w-full flex justify-start items-center gap-3 px-4 py-2 transition text-neutral-content font-semibold hover:bg-base-300 hover:rounded-l-2xl hover:shadow-xl/30 hover:font-bold 
      ${isActive ? "bg-base-300 rounded-l-2xl shadow-xl/30" : "text-gray-300"}`
           }
         >
+          <CiViewList />
           Oder Requests
         </NavLink>
       </li>
