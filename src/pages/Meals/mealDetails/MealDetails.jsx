@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import axiosPublic from "../../../api/axiosPublic";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import { FaStar } from "react-icons/fa";
 import { AuthContext } from "../../../providers/AuthProvider";
 import GiveReview from "../../../components/GiveReview";
@@ -156,11 +156,12 @@ const MealDetails = () => {
           {/* Action Buttons */}
           {dbUser.role === "user" && (
             <div className="flex gap-4 pt-4">
-              <button className="btn btn-primary">
-                <CiShoppingCart />
-                Order Now
-              </button>
-
+              <Link to={`/foodOrder/${id}`}>
+                <button className="btn btn-primary">
+                  <CiShoppingCart />
+                  Order Now
+                </button>
+              </Link>
               <button
                 onClick={handleAddToFavorite}
                 disabled={addToFavoriteMutation.isLoading}

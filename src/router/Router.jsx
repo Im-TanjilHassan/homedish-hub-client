@@ -18,6 +18,7 @@ import Order from "../pages/DashboardPages/CHEF_dashboard/ORDER_Requests/Order";
 import ManageUser from "../pages/DashboardPages/adminDashboard/manageUser/ManageUser";
 import PlatformStatics from "../pages/DashboardPages/adminDashboard/platformStatics/PlatformStatics";
 import MealDetails from "../pages/Meals/mealDetails/MealDetails";
+import FoodOrder from "../pages/FoodOrder/FoodOrder";
 
 export const router = createBrowserRouter([
   {
@@ -38,6 +39,14 @@ export const router = createBrowserRouter([
           <PrivateRoute>
             <MealDetails></MealDetails>
           </PrivateRoute>
+        ),
+      },
+      {
+        path: "/foodOrder/:id",
+        element: (
+          <RoleRoute allow={["user"]}>
+            <FoodOrder></FoodOrder>
+          </RoleRoute>
         ),
       },
       {
