@@ -5,7 +5,7 @@ import { TbTruckDelivery } from "react-icons/tb";
 
 const RequestTable = ({
   order,
-  handleAcceptReq,
+  handleAcceptOrder,
   handleRejectReq,
   handleCancelOrder,
 }) => {
@@ -21,41 +21,53 @@ const RequestTable = ({
     paymentStatus,
   } = order;
 
+  const cancelDisabled = orderStatus !== "pending";
+  const acceptDisabled = orderStatus !== "pending";
+  const deliverDisabled = orderStatus !== "accepted";
+
   return (
     <tr className="text-center cursor-default">
       <td>{foodName}</td>
       <td>{price}</td>
       <td>{quantity}</td>
-      <td>{orderStatus}</td>
+      <td
+        className={`${orderStatus === "cancelled" && "text-red-600"} ${
+          orderStatus === "accepted" && "text-green-600"
+        } ${orderStatus === "deliver" && "text-primary/80"}`}
+      >
+        {orderStatus}
+      </td>
       <td>{userEmail}</td>
       <td>{format(new Date(orderTime), "dd/MM/yyyy hh:mm a")}</td>
       <td>{userAddress}</td>
       <td>{paymentStatus}</td>
-      <th className="space-x-2 flex flex-col justify-center items-center gap-y-3">
-        <button
-          onClick={() => handleAcceptReq(_id)}
-          disabled={orderStatus === "cancelled"}
-          className="btn bg-green-500 text-white font-semibold hover:bg-green-600 btn-xs"
-        >
-          <MdOutlineDone />
-          Accept
-        </button>
-        <button
-          onClick={() => handleCancelOrder(_id)}
-          disabled={orderStatus === "cancelled"}
-          className="btn bg-red-600 font-semibold hover:bg-red-700 btn-xs"
-        >
-          <RxCross2 />
-          Cancel
-        </button>
-        <button
-          onClick={() => handleRejectReq(_id)}
-          disabled={orderStatus === "cancelled"}
-          className="btn bg-primary font-semibold hover:bg-primary/80 btn-xs"
-        >
-          <TbTruckDelivery />
-          Deliver
-        </button>
+      <th className="h-30">
+        <div className="flex-col space-y-2 block">
+          <button
+            onClick={() => handleAcceptOrder(_id)}
+            disabled={acceptDisabled}
+            className="btn bg-green-500  font-semibold hover:bg-green-600 btn-xs disabled:bg-green-950"
+          >
+            <MdOutlineDone />
+            Accept
+          </button>
+          <button
+            onClick={() => handleCancelOrder(_id)}
+            disabled={cancelDisabled}
+            className="btn bg-red-600 font-semibold hover:bg-red-700 btn-xs disabled:bg-red-950"
+          >
+            <RxCross2 />
+            Cancel
+          </button>
+          <button
+            onClick={() => handleRejectReq(_id)}
+            disabled={deliverDisabled}
+            className="btn bg-primary font-semibold hover:bg-primary/80 btn-xs disabled:bg-primary/40"
+          >
+            <TbTruckDelivery />
+            Deliver
+          </button>
+        </div>
       </th>
     </tr>
   );

@@ -19,6 +19,8 @@ import ManageUser from "../pages/DashboardPages/adminDashboard/manageUser/Manage
 import PlatformStatics from "../pages/DashboardPages/adminDashboard/platformStatics/PlatformStatics";
 import MealDetails from "../pages/Meals/mealDetails/MealDetails";
 import FoodOrder from "../pages/FoodOrder/FoodOrder";
+import PayNow from "../pages/DashboardPages/myOrder/Payment/PayNow";
+import PaymentSuccess from "../pages/DashboardPages/myOrder/Payment/paymentSuccess/PaymentSuccess";
 
 export const router = createBrowserRouter([
   {
@@ -80,6 +82,22 @@ export const router = createBrowserRouter([
         element: (
           <RoleRoute allow={["user"]}>
             <MyOrder></MyOrder>
+          </RoleRoute>
+        ),
+      },
+      {
+        path: "payNow/:id",
+        element: (
+          <RoleRoute allow={["user"]}>
+            <PayNow></PayNow>
+          </RoleRoute>
+        ),
+      },
+      {
+        path: "paymentSuccess/:id",
+        element: (
+          <RoleRoute allow={["user"]}>
+            <PaymentSuccess></PaymentSuccess>
           </RoleRoute>
         ),
       },

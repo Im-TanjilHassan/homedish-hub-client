@@ -34,6 +34,17 @@ const Order = () => {
         queryClient.invalidateQueries(["chefOrders"]);
       },
     });
+  
+  // call accept
+  const acceptOrderMutation = useMutation({
+    mutationFn: async (orderId) => {
+      const res = await axiosSecure.patch(`/orders/accept/${orderId}`);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["chefOrders"]);
+    },
+  });
 
     // BTNS FUNCTIONS
     // ----------------------------
@@ -50,7 +61,22 @@ const Order = () => {
       if (!result.isConfirmed) return;
 
       cancelOrderMutation.mutate(orderId);
-    };
+  };
+  
+  // accept btn
+  const handleAcceptOrder = async (orderId) => {
+    const result = await Swal.fire({
+      title: "Accept this order?",
+      text: "Once accepted, the user can proceed to payment.",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Accept Order",
+    });
+
+    if (!result.isConfirmed) return;
+
+    acceptOrderMutation.mutate(orderId);
+  };
 
   if (isLoading) {
     return <p className="text-center">Loading orders...</p>;
@@ -94,7 +120,7 @@ const Order = () => {
                     <OrderTable
                       key={order._id}
                       order={order}
-                      // handleAcceptReq={handleAcceptReq}
+                      handleAcceptOrder={handleAcceptOrder}
                       // handleRejectReq={handleRejectReq}
                       handleCancelOrder={handleCancelOrder}
                     ></OrderTable>

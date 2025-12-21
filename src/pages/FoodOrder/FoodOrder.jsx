@@ -65,6 +65,8 @@ function FoodOrder() {
       chefId: meal.chefId,
       userEmail: user.email,
       userAddress: data.userAddress,
+      chefName: meal.chefName,
+      deliveryTime: meal.estimatedDeliveryTime,
     };
 
     try {
@@ -94,9 +96,10 @@ function FoodOrder() {
     }
   };
 
+  console.log("price value:", meal?.price, "type:", typeof meal?.price);
   const quantity = Number(watch("quantity") || 0);
-  const totalPrice =
-    meal && quantity > 0 ? (quantity * meal.price).toFixed(2) : "0.00";
+  const price = Number(meal?.price || 0);
+  const totalPrice = quantity > 0 ? (quantity * price).toFixed(2) : "0.00";
 
   if (isLoading) {
     return <p className="text-center text-gray-500">Loading...</p>;
