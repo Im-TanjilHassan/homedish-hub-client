@@ -12,9 +12,6 @@ const UserReviews = () => {
       },
     });
   
-    console.log("from home review", reviews);
-    
-
      if (isLoading) {
        return (
          <div className="flex justify-center py-16">

@@ -96,7 +96,6 @@ function FoodOrder() {
     }
   };
 
-  console.log("price value:", meal?.price, "type:", typeof meal?.price);
   const quantity = Number(watch("quantity") || 0);
   const price = Number(meal?.price || 0);
   const totalPrice = quantity > 0 ? (quantity * price).toFixed(2) : "0.00";

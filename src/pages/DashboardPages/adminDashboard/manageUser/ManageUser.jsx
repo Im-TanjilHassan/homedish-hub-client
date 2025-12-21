@@ -53,8 +53,6 @@ const ManageUser = () => {
     };
 
 
-  console.log(users);
-
   return (
     <div className="min-h-screen bg-base-200 rounded-2xl flex justify-center px-4 py-10">
       <div className="w-full max-w-5xl space-y-6">

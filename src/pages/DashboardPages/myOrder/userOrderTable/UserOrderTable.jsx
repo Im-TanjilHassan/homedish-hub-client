@@ -1,7 +1,7 @@
 import { MdOutlinePayment } from "react-icons/md";
 import { Link } from "react-router";
 
-const UserOrderTable = ({ order, handlePay }) => {
+const UserOrderTable = ({ order }) => {
   const {
     _id,
     foodName,
@@ -22,7 +22,7 @@ const UserOrderTable = ({ order, handlePay }) => {
       <td
         className={`${orderStatus === "cancelled" && "text-red-600"} ${
           orderStatus === "accepted" && "text-green-600"
-        } ${orderStatus === "deliver" && "text-primary/80"}`}
+        } ${orderStatus === "delivered" && "text-primary/80"}`}
       >
         {orderStatus}
       </td>
@@ -34,7 +34,6 @@ const UserOrderTable = ({ order, handlePay }) => {
           {orderStatus === "accepted" && paymentStatus === "Pending" ? (
             <Link to={`/dashboard/payNow/${_id}`}>
               <button
-                onClick={() => handlePay(order)}
                 className="btn bg-primary font-semibold hover:bg-primary/80 btn-xs disabled:bg-primary/40"
               >
                 <MdOutlinePayment />

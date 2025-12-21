@@ -196,8 +196,6 @@ const DashboardLayout = () => {
     </ul>
   );
 
-  console.log(dbUser, user);
-
   if (loading && !dbUser) return <p>Loading...</p>;
 
   return (

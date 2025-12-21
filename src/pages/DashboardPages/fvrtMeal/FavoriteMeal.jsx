@@ -67,8 +67,6 @@ const FavoriteMeal = () => {
     return <p className="text-center">Loading favorites...</p>;
   }
 
-  console.log(favorites);
-
   return (
     <div className="min-h-screen bg-base-200 rounded-2xl px-4 py-10">
       <div className="w-full max-w-5xl space-y-6">

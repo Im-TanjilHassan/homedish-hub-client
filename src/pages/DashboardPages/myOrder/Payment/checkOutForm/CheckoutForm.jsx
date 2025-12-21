@@ -28,8 +28,6 @@ function CheckoutForm({ clientSecret }) {
         },
       });
 
-    console.log("confirming with:", clientSecret);
-
     if (stripeError) {
       setError(stripeError.message);
       setProcessing(false);

@@ -23,10 +23,6 @@ const MyOrder = () => {
       },
     });
 
-    const handlePay = (order) => {
-      console.log("Proceed to payment for:", order._id);
-    };
-
     if (isLoading) {
       return <p className="text-center">Loading your orders...</p>;
     }

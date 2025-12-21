@@ -13,7 +13,6 @@ const UpdateMealModal = ({ meal, close, refetch }) => {
   });
 
   const onSubmit = async (data) => {
-    console.log(data);
 
     await axiosSecure.patch(`/meals/${meal._id}`, data);
 

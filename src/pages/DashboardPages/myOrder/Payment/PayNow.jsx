@@ -35,8 +35,6 @@ const PayNow = () => {
     refetchOnWindowFocus: false,
   });
 
-  console.log("payment intent data:", intentData);
-
   if (isLoading || intentLoading) {
     return <p className="text-center py-10">Preparing payment...</p>;
   }
@@ -45,8 +43,6 @@ const PayNow = () => {
   if (!intentData?.clientSecret) {
     return <p className="text-center py-10 text-red-400">Payment failed.</p>;
   }
-
-  console.log("form payment page:", order);
 
   //Guard
   if (order.orderStatus !== "accepted" || order.paymentStatus !== "Pending") {

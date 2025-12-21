@@ -23,7 +23,6 @@ const ManageRequest = () => {
      return <p>Loading...</p>;
   }
   
-  // console.log(pendingChefs);
   const handleAcceptReq = async(userId) => {
     const result = await Swal.fire({
       title: "Approve Chef Request?",

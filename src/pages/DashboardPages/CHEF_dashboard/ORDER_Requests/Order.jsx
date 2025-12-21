@@ -46,6 +46,18 @@ const Order = () => {
     },
   });
 
+  //call delivered
+  const deliverMutation = useMutation({
+    mutationFn: async (orderId) => {
+      const res = await axiosSecure.patch(`/orders/deliver/${orderId}`);
+      return res.data;
+    },
+    onSuccess: () => {
+      // Refresh chef orders after delivery
+      queryClient.invalidateQueries(["chefOrders"]);
+    },
+  });
+
     // BTNS FUNCTIONS
     // ----------------------------
     //cancel btn
@@ -78,11 +90,23 @@ const Order = () => {
     acceptOrderMutation.mutate(orderId);
   };
 
+  const handleDeliveredOrder = async (orderId) => {
+    const result = await Swal.fire({
+      title: "Delivered this order?",
+      text: "Once Delivered, the user Will get the order.",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes, Deliver",
+    });
+
+    if (!result.isConfirmed) return;
+
+    deliverMutation.mutate(orderId);
+  }
+
   if (isLoading) {
     return <p className="text-center">Loading orders...</p>;
   }
-
-  console.log(orders);
 
   return (
     <div className="min-h-screen bg-base-200 rounded-2xl px-4 py-10">
@@ -121,7 +145,7 @@ const Order = () => {
                       key={order._id}
                       order={order}
                       handleAcceptOrder={handleAcceptOrder}
-                      // handleRejectReq={handleRejectReq}
+                      handleDeliveredOrder={handleDeliveredOrder}
                       handleCancelOrder={handleCancelOrder}
                     ></OrderTable>
                   ))}

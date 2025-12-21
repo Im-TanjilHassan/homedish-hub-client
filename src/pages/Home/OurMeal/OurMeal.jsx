@@ -18,8 +18,6 @@ const OurMeal = () => {
      if (isLoading) return <p>Loading...</p>;
     if (isError) return <p>Error...</p>;
     
-    console.log(meals);
-    
     return (
       <div className="mb-20">
         <div className="text-center space-y-3 mb-30">

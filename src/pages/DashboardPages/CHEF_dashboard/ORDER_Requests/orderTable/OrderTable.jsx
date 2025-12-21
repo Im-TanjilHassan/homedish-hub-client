@@ -6,7 +6,7 @@ import { TbTruckDelivery } from "react-icons/tb";
 const RequestTable = ({
   order,
   handleAcceptOrder,
-  handleRejectReq,
+  handleDeliveredOrder,
   handleCancelOrder,
 }) => {
   const {
@@ -23,7 +23,7 @@ const RequestTable = ({
 
   const cancelDisabled = orderStatus !== "pending";
   const acceptDisabled = orderStatus !== "pending";
-  const deliverDisabled = orderStatus !== "accepted";
+  const canDeliver = orderStatus === "accepted" && paymentStatus === "paid";
 
   return (
     <tr className="text-center cursor-default">
@@ -33,7 +33,7 @@ const RequestTable = ({
       <td
         className={`${orderStatus === "cancelled" && "text-red-600"} ${
           orderStatus === "accepted" && "text-green-600"
-        } ${orderStatus === "deliver" && "text-primary/80"}`}
+        } ${orderStatus === "delivered" && "text-primary/80"}`}
       >
         {orderStatus}
       </td>
@@ -60,8 +60,8 @@ const RequestTable = ({
             Cancel
           </button>
           <button
-            onClick={() => handleRejectReq(_id)}
-            disabled={deliverDisabled}
+            onClick={() => handleDeliveredOrder(_id)}
+            disabled={!canDeliver}
             className="btn bg-primary font-semibold hover:bg-primary/80 btn-xs disabled:bg-primary/40"
           >
             <TbTruckDelivery />

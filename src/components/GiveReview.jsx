@@ -43,8 +43,6 @@ const GiveReview = ({ id }) => {
     }
   };
 
-  console.log(id);
-
   return (
     <div className="bg-base-200 border border-base-300 rounded-xl p-6 shadow-xl/30 mb-10">
       <h3 className="text-xl font-semibold mb-4">Your Review</h3>
