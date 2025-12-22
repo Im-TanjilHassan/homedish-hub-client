@@ -59,14 +59,7 @@ const AuthProvider = ({ children }) => {
        { email: result.user.email }
     );
 
-    try {
-      const res = await axiosSecure.get("/profile");
-      setDbUser(res.data);
-    } catch (err) {
-      console.log(err);
-      setDbUser(null);
-    }
-    
+    refetchProfile();
 
     return result;
   };
@@ -85,11 +78,11 @@ const AuthProvider = ({ children }) => {
   //track User
   useEffect(() => {
     const unSub = onAuthStateChanged(auth, async (currentUser) => {
-      
-      
+  
        if (currentUser) {
          try {
            const res = await axiosSecure.get("/profile");
+           refreshUser()
            setDbUser(res.data);
          } catch (err) {
            console.error("Profile fetch failed", err);

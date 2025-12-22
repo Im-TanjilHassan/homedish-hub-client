@@ -21,11 +21,13 @@ import MealDetails from "../pages/Meals/mealDetails/MealDetails";
 import FoodOrder from "../pages/FoodOrder/FoodOrder";
 import PayNow from "../pages/DashboardPages/myOrder/Payment/PayNow";
 import PaymentSuccess from "../pages/DashboardPages/myOrder/Payment/paymentSuccess/PaymentSuccess";
+import ErrorPage from "../pages/Error/ErrorPage";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     Component: MainLayout,
+    errorElement: <ErrorPage />,
     children: [
       {
         index: true,
@@ -46,7 +48,7 @@ export const router = createBrowserRouter([
       {
         path: "/foodOrder/:id",
         element: (
-          <RoleRoute allow={["user"]}>
+          <RoleRoute allow={["user", "chef-pending", "admin-pending"]}>
             <FoodOrder></FoodOrder>
           </RoleRoute>
         ),
@@ -63,6 +65,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
+    errorElement: <ErrorPage />,
     element: (
       <PrivateRoute>
         <DashboardLayout></DashboardLayout>
@@ -80,7 +83,7 @@ export const router = createBrowserRouter([
       {
         path: "myOrder",
         element: (
-          <RoleRoute allow={["user"]}>
+          <RoleRoute allow={["user", "chef-pending", "admin-pending"]}>
             <MyOrder></MyOrder>
           </RoleRoute>
         ),
@@ -88,7 +91,7 @@ export const router = createBrowserRouter([
       {
         path: "payNow/:id",
         element: (
-          <RoleRoute allow={["user"]}>
+          <RoleRoute allow={["user", "chef-pending", "admin-pending"]}>
             <PayNow></PayNow>
           </RoleRoute>
         ),
@@ -96,7 +99,7 @@ export const router = createBrowserRouter([
       {
         path: "paymentSuccess/:id",
         element: (
-          <RoleRoute allow={["user"]}>
+          <RoleRoute allow={["user", "chef-pending", "admin-pending"]}>
             <PaymentSuccess></PaymentSuccess>
           </RoleRoute>
         ),
@@ -104,7 +107,7 @@ export const router = createBrowserRouter([
       {
         path: "myReview",
         element: (
-          <RoleRoute allow={["user"]}>
+          <RoleRoute allow={["user", "chef-pending", "admin-pending"]}>
             <MyReview></MyReview>
           </RoleRoute>
         ),
@@ -112,7 +115,7 @@ export const router = createBrowserRouter([
       {
         path: "favoriteMeal",
         element: (
-          <RoleRoute allow={["user"]}>
+          <RoleRoute allow={["user", "chef-pending", "admin-pending"]}>
             <FavoriteMeal></FavoriteMeal>
           </RoleRoute>
         ),

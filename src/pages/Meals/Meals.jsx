@@ -6,28 +6,28 @@ import FoodCard from "../../components/FoodCard";
 const Meals = () => {
   const [sortOrder, setSortOrder] = useState("asc");
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
 
-  const { data: meals = [], isLoading } = useQuery({
-    queryKey: ["meals", sortOrder],
+  const limit = 8;
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["meals", sortOrder, search, page],
     queryFn: async () => {
-      const res = await axiosPublic.get(`/allMeals?sort=${sortOrder}`);
+      const res = await axiosPublic.get(
+        `/allMeals?sort=${sortOrder}&search=${search}&page=${page}&limit=${limit}`
+      );
       return res.data;
     },
+    keepPreviousData: true,
   });
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <p className="text-4xl font-bold">
-          L<span className="loading loading-spinner loading-md"></span>ading...
-        </p>
-      </div>
-    );
-    }
-    
-    const filteredMeals = meals.filter((meal) =>
-      meal.foodName.toLowerCase().includes(search.toLowerCase())
-    );
+  React.useEffect(() => {
+    setPage(1);
+  }, [sortOrder, search]);
+
+  const meals = data?.meals || [];
+  const totalMeals = data?.total || 0;
+  const totalPages = data?.totalPages || 1;
 
   return (
     <section className="mb-20">
@@ -47,7 +47,7 @@ const Meals = () => {
         {/* Left: Total Meals */}
         <div className="text-lg font-medium">
           Total Meals(
-          <span className="font-semibold">{filteredMeals.length}</span>)
+          <span className="font-semibold">{totalMeals}</span>)
         </div>
 
         {/* Right: Search + Sort */}
@@ -60,7 +60,6 @@ const Meals = () => {
             placeholder="Search meals..."
             className="input border bg-base-200 w-94"
           />
-
           {/* Sort */}
           <select
             value={sortOrder}
@@ -72,17 +71,53 @@ const Meals = () => {
           </select>
         </div>
       </div>
-      {filteredMeals.length === 0 ? (
+      {isLoading && (
+        <div className="flex justify-center my-10">
+          <span className="loading loading-spinner loading-lg"></span>
+        </div>
+      )}
+      {meals.length === 0 ? (
         <div className="text-center">
-          <p className="text-3xl text-gray-400 font-semibold">No Meal Found!!</p>
+          <p className="text-3xl text-gray-400 font-semibold">
+            No Meal Found!!
+          </p>
         </div>
       ) : (
-        <div className="grid grid-cols-3 justify-items-center items-center-safe gap-y-20">
-          {filteredMeals.map((meal) => (
-          <FoodCard key={meal._id} meal={meal}></FoodCard>
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6 space-y-16">
+          {meals.map((meal) => (
+            <FoodCard key={meal._id} meal={meal} />
           ))}
         </div>
       )}
+      <div className="flex justify-center gap-2 mt-10">
+        <button
+          className="btn btn-outline"
+          disabled={page === 1}
+          onClick={() => setPage(page - 1)}
+        >
+          Prev
+        </button>
+
+        {[...Array(totalPages).keys()].map((num) => (
+          <button
+            key={num}
+            className={`btn ${
+              page === num + 1 ? "btn-primary" : "btn-outline"
+            }`}
+            onClick={() => setPage(num + 1)}
+          >
+            {num + 1}
+          </button>
+        ))}
+
+        <button
+          className="btn btn-outline"
+          disabled={page === totalPages}
+          onClick={() => setPage(page + 1)}
+        >
+          Next
+        </button>
+      </div>
     </section>
   );
 };

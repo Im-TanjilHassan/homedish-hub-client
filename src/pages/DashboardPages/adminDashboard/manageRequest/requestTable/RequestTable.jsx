@@ -1,8 +1,33 @@
-import { format } from "date-fns";
+import { format, isValid, parseISO } from "date-fns";
 
-const RequestTable = ({ pendingData, handleAcceptReq, handleRejectReq }) => {
-  const { _id, name, email, role, chefRequestedAt, image, address } =
-    pendingData;
+const RequestTable = ({
+  pendingData,
+  handleAcceptReq,
+  handleRejectReq,
+  handleAcceptAdmin,
+  handleRejectAdmin
+}) => {
+  const {
+    _id,
+    uid,
+    name,
+    email,
+    role,
+    adminRequestedAt,
+    image,
+    address,
+    chefRequestedAt,
+  } = pendingData;
+
+  const formatDateSafe = (value) => {
+    if (!value || typeof value !== "string") return "—";
+
+    const date = parseISO(value);
+
+    if (!isValid(date)) return "—";
+
+    return format(date, "dd/MM/yyyy hh:mm a");
+  };
 
   return (
     <tr className="text-center hover:bg-base-300/60">
@@ -21,21 +46,42 @@ const RequestTable = ({ pendingData, handleAcceptReq, handleRejectReq }) => {
       </td>
       <td>{email}</td>
       <td>{role}</td>
-      <td>{format(new Date(chefRequestedAt), "dd/MM/yyyy hh:mm a")}</td>
-      <th className="space-x-2">
-        <button
-          onClick={() => handleAcceptReq(_id)}
-          className="btn bg-green-400 text-black font-semibold hover:bg-green-600 btn-xs"
-        >
-          Accept
-        </button>
-        <button
-          onClick={() => handleRejectReq(_id)}
-          className="btn bg-base-300 font-semibold hover:bg-base-300/80 btn-xs"
-        >
-          Reject
-        </button>
-      </th>
+      {adminRequestedAt ? (
+        <td>{formatDateSafe(adminRequestedAt)}</td>
+      ) : (
+        <td>{formatDateSafe(chefRequestedAt)}</td>
+      )}
+      {role === "chef-pending" ? (
+        <th className="space-x-2">
+          <button
+            onClick={() => handleAcceptReq(_id)}
+            className="btn bg-green-400 text-black font-semibold hover:bg-green-600 btn-xs"
+          >
+            Accept
+          </button>
+          <button
+            onClick={() => handleRejectReq(_id)}
+            className="btn bg-base-300 font-semibold hover:bg-base-300/80 btn-xs"
+          >
+            Reject
+          </button>
+        </th>
+      ) : (
+        <th className="space-x-2">
+          <button
+            onClick={() => handleAcceptAdmin(uid)}
+            className="btn bg-green-400 text-black font-semibold hover:bg-green-600 btn-xs"
+          >
+            Accept
+          </button>
+          <button
+            onClick={() => handleRejectAdmin(uid)}
+            className="btn bg-base-300 font-semibold hover:bg-base-300/80 btn-xs"
+          >
+            Reject
+          </button>
+        </th>
+      )}
     </tr>
   );
 };

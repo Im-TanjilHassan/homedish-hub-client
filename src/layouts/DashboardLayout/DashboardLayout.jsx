@@ -16,7 +16,7 @@ import { GiHotMeal } from "react-icons/gi";
 import { CiViewList } from "react-icons/ci";
 
 const DashboardLayout = () => {
-  const { logOut, dbUser, user, loading } = useContext(AuthContext);
+  const { logOut, dbUser, loading } = useContext(AuthContext);
 
   const adminMenu = (
     <ul className="space-y-3 pl-5 mb-10">
@@ -267,9 +267,9 @@ const DashboardLayout = () => {
         {/* SIDEBAR */}
         <div className="hidden md:block lg:block w-64 bg-base-200 border-r border-r-base-100 py-5 min-h-screen h-full relative">
           <div>
-
             {(dbUser?.role === "user" && userMenu) ||
-              (dbUser?.role === "chef-pending" && userMenu)}
+              (dbUser?.role === "chef-pending" && userMenu) ||
+              dbUser.role === "admin-pending" && userMenu}
             {dbUser?.role === "chef" && chefMenu}
             {dbUser?.role === "admin" && adminMenu}
           </div>

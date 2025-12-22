@@ -66,7 +66,6 @@ const MyOrder = () => {
                       <UserOrderTable
                         key={order._id}
                         order={order}
-                        handlePay={handlePay}
                       ></UserOrderTable>
                     ))}
                   </tbody>

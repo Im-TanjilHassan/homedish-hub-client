@@ -16,7 +16,8 @@ import axiosPublic from "../../api/axiosPublic";
 import axiosSecure from "../../api/axiosSecure";
 
 const Register = () => {
-  const { registerUser, updateUser, refreshUser } = useContext(AuthContext);
+  const { registerUser, updateUser, refreshUser, refetchProfile } =
+    useContext(AuthContext);
   const [showPass, setShowPass] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
   const location = useLocation();
@@ -32,7 +33,7 @@ const Register = () => {
   const from = location.state?.from?.pathname || "/";
   const imgbbKey = import.meta.env.VITE_IMAGEBB_KEY;
 
-  const registerUserMutation = useMutation({
+  const registerUserMutation = useMutation({ 
     mutationFn: async (userProfile) => {
       const res = await axiosPublic.post("/registration", userProfile)
 
@@ -73,6 +74,8 @@ const Register = () => {
       await registerUserMutation.mutateAsync(profileToSave)
 
       await axiosSecure.post("/login", { email: data.email });
+
+      refetchProfile()
 
       setShowLoader(false);
       refreshUser();

@@ -9,7 +9,7 @@ import axiosSecure from "../../api/axiosSecure";
 
 function FoodOrder() {
   const { id } = useParams();
-    const { user } = useContext(AuthContext);
+    const { dbUser, user } = useContext(AuthContext);
     const navigate = useNavigate();
 
   //fetch single meal
@@ -44,6 +44,14 @@ function FoodOrder() {
     }
   }, [meal, reset]);
 
+  if (dbUser?.status === "fraud") {
+    return (
+      <p className="text-center text-red-500">
+        Your account is marked as fraud. You cannot place orders.
+      </p>
+    );
+  }
+
   const onSubmit = async (data) => {
     const total = (data.quantity * meal.price).toFixed(2);
 
@@ -63,7 +71,7 @@ function FoodOrder() {
       price: meal.price,
       quantity: data.quantity,
       chefId: meal.chefId,
-      userEmail: user.email,
+      userEmail: dbUser.email,
       userAddress: data.userAddress,
       chefName: meal.chefName,
       deliveryTime: meal.estimatedDeliveryTime,
@@ -102,14 +110,6 @@ function FoodOrder() {
 
   if (isLoading) {
     return <p className="text-center text-gray-500">Loading...</p>;
-  }
-
-  if (user?.status === "fraud") {
-    return (
-      <p className="text-center text-red-500">
-        Your account is marked as fraud. You cannot place orders.
-      </p>
-    );
   }
 
   return (

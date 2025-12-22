@@ -6,7 +6,8 @@ import Swal from "sweetalert2";
 
 const Profile = () => {
   const { dbUser, user, refetchProfile } = useContext(AuthContext);
-  const [reqPending, setReqPending] = useState(false)
+  const [reqPending, setReqPending] = useState(false);
+  const [adminReqPending, setAdminReqPending] = useState(false);
 
   const handleChefRequest = async () => {
     const result = await Swal.fire({
@@ -26,7 +27,7 @@ const Profile = () => {
       await axiosSecure.post("/chefRequest");
 
       refetchProfile();
-      
+
       Swal.fire({
         icon: "success",
         title: "Request Sent",
@@ -34,7 +35,6 @@ const Profile = () => {
         timer: 1500,
         showConfirmButton: false,
       });
-
     } catch (err) {
       Swal.fire({
         icon: "error",
@@ -42,10 +42,48 @@ const Profile = () => {
         text: err.response?.data?.message || "Something went wrong",
       });
     } finally {
-      setReqPending(false)
+      setReqPending(false);
     }
   };
 
+  const handleAdminReq = async () => {
+    const result = await Swal.fire({
+      title: "Become An Admin?",
+      text: "This request will be sent for admin approval.",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Yes, send request",
+      cancelButtonText: "No",
+      reverseButtons: true,
+    });
+
+    if (!result.isConfirmed) return;
+
+    setAdminReqPending(true);
+
+    try {
+      await axiosSecure.post("/adminRequest");
+
+      Swal.fire({
+        icon: "success",
+        title: "Request Sent",
+        text: "Your admin request is pending approval",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
+      // refetch profile to update role
+      await refetchProfile();
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Request Failed",
+        text: err.response?.data?.message || "Unable to send admin request",
+      });
+    } finally {
+      setAdminReqPending(false);
+    }
+  };
   return (
     <div className="min-h-screen bg-base-200 rounded-2xl flex justify-center px-4 py-10">
       <div className="w-full max-w-5xl space-y-6">
@@ -74,22 +112,28 @@ const Profile = () => {
                   </span>
                 </div>
               )}
-              <span className={`absolute -bottom-0.5 -right-0.5 h-5 w-5 rounded-full ${dbUser.status === "fraud" ? "bg-red-700" : "bg-green-700"} border-2 border-white flex items-center justify-center`}>
-                {/* <i data-lucide="check" className="w-3 h-3 text-white"></i> */}
-              </span>
+              <span
+                className={`absolute -bottom-0.5 -right-0.5 h-5 w-5 rounded-full ${
+                  dbUser.status === "fraud" ? "bg-red-700" : "bg-green-700"
+                } border-2 border-white flex items-center justify-center`}
+              ></span>
             </div>
             <div>
-              <h2 className="text-lg md:text-xl font-semibold tracking-tight text-primary">
-                {user.displayName}
-              </h2>
+              <div>
+                <h2 className="text-lg md:text-xl font-semibold tracking-tight text-primary">
+                  {user.displayName}
+                </h2>
+                {dbUser.status === "fraud" ? (
+                  <span className="text-red-500 text-sm">
+                    (You Are Marked As {dbUser.status})
+                  </span>
+                ) : (
+                  <></>
+                )}
+              </div>
               <p className="mt-0.5 text-base text-emerald-700 font-semibold">
-                {
-                  dbUser.role === "user" && dbUser.role 
-                }
-                {
-                  dbUser.role === "chef" && `chefId: ${dbUser.chefId}`
-                }
-                
+                {dbUser.role}
+                {dbUser.role === "chef" && `Id: ${dbUser.chefId}`}
               </p>
               <p className="mt-0.5 text-sm md:text-base text-gray-500">
                 {dbUser.address}
@@ -160,17 +204,28 @@ const Profile = () => {
               <p className="text-neutral-content font-medium">{dbUser.role}</p>
             </div>
           </div>
-          {dbUser.role !== "admin" && (
+          {dbUser.role === "user" && (
             <div className="w-full flex justify-end items-center gap-5">
               <button
                 hidden={dbUser.role === "chef"}
-                disabled={dbUser.role === "chef-pending"}
+                disabled={
+                  dbUser.role === "chef-pending" ||
+                  dbUser.role === "admin-pending"
+                }
                 onClick={handleChefRequest}
                 className="rounded-lg shadow-xl/30 px-3 py-1.5 text-white font-bold bg-primary hover:bg-primary/80 cursor-pointer disabled:bg-base-300 disabled:text-gray-500"
               >
                 {reqPending ? "Sending..." : "Be A Chef"}
               </button>
-              <button className="rounded-lg shadow-xl/30 px-3 py-1.5 text-white font-bold bg-primary hover:bg-primary/80 cursor-pointer">
+              <button
+                onClick={handleAdminReq}
+                hidden={dbUser.role === "chef"}
+                disabled={
+                  dbUser.role === "chef-pending" ||
+                  dbUser.role === "admin-pending"
+                }
+                className="rounded-lg shadow-xl/30 px-3 py-1.5 text-white font-bold bg-primary hover:bg-primary/80 cursor-pointer"
+              >
                 Be An Admin
               </button>
             </div>
