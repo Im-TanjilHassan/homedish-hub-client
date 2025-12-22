@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 const Profile = () => {
   const { dbUser, user, refetchProfile } = useContext(AuthContext);
   const [reqPending, setReqPending] = useState(false);
-  const [adminReqPending, setAdminReqPending] = useState(false);
+  const [setAdminReqPending] = useState(false);
 
   const handleChefRequest = async () => {
     const result = await Swal.fire({

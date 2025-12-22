@@ -2,6 +2,8 @@ import { Link, useRouteError } from "react-router";
 
 const ErrorPage = () => {
   const error = useRouteError();
+  console.log(error);
+  
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center text-center px-4">
