@@ -6,10 +6,10 @@ import { IoMdMail } from "react-icons/io";
 import { FaArrowRight, FaEye, FaLock, FaRegEyeSlash } from "react-icons/fa6";
 import { Link, useLocation, useNavigate } from "react-router";
 import { useMutation } from "@tanstack/react-query";
-import axiosPublic from "../../api/axiosPublic";
+import axiosSecure from "../../api/axiosSecure";
 
 const Login = () => {
-  const { loginUser, refreshUser } = useContext(AuthContext);
+  const { loginUser, refreshUser, refetchProfile } = useContext(AuthContext);
   const [showPass, setShowPass] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
 
@@ -27,22 +27,23 @@ const Login = () => {
 
   const loginMutation = useMutation({
     mutationFn: async (email) => {
-      const res = await axiosPublic.post("/login", { email });
-
-      return res.data
-    }
-  })
+      const res = await axiosSecure.post("/login", { email });
+      return res.data;
+    },
+  });
 
   const handleLogin = async (data) => {
     try {
       setShowLoader(true);
 
       const user = await loginUser(data.email, data.password);
-      
+
       await loginMutation.mutateAsync(user.user.email);
+      await refetchProfile();
+
+      refreshUser();
 
       setShowLoader(false);
-      refreshUser();
 
       Swal.fire({
         title: "Log In Successful",
@@ -59,9 +60,11 @@ const Login = () => {
 
       Swal.fire({
         title: "Login failed",
-        text: err.message,
+        text: err.message || "Please check your credentials",
         icon: "error",
       });
+    } finally {
+      setShowLoader(false);
     }
   };
 
@@ -81,10 +84,7 @@ const Login = () => {
           )}
           {!showLoader && (
             <div>
-              <form
-                onSubmit={handleSubmit(handleLogin)}
-                className="space-y-4"
-              >
+              <form onSubmit={handleSubmit(handleLogin)} className="space-y-4">
                 {/* email */}
                 <div className="space-y-1.5">
                   <label className="text-sm font-medium text-black">

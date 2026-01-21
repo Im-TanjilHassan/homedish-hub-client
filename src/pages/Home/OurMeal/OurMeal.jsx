@@ -10,9 +10,13 @@ const OurMeal = () => {
      } = useQuery({
        queryKey: ["home-meals"],
        queryFn: async () => {
-         const res = await axiosPublic.get("/meals/home");
+         const res = await axiosPublic.get("/meals/home", {
+           timeout: 60000,
+         });
          return res.data;
        },
+       retry: 5,
+       retryDelay: (attemptIndex) => Math.min(3000 * (attemptIndex + 1), 15000),
      });
 
      if (isLoading) return <p>Loading...</p>;

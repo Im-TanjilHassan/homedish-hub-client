@@ -46,8 +46,26 @@ const Register = () => {
     try {
       setShowLoader(true);
 
+      const imageFile = data.image[0];
+
+      const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+      if (imageFile.size > maxSize) {
+        throw new Error("Image size must be less than 5MB");
+      }
+
+      const allowedTypes = [
+        "image/jpeg",
+        "image/jpg",
+        "image/png",
+        "image/gif",
+        "image/webp",
+      ];
+      if (!allowedTypes.includes(imageFile.type)) {
+        throw new Error("Only JPEG, PNG, GIF, and WebP images are allowed");
+      }
+
       const formData = new FormData();
-      formData.append("image", data.image[0]);
+      formData.append("image", imageFile);
 
       const uploadRes = await fetch(
         `https://api.imgbb.com/1/upload?key=${imgbbKey}`,
@@ -57,7 +75,16 @@ const Register = () => {
         }
       );
 
+      if (!uploadRes.ok) {
+        throw new Error("Image upload failed. Please try again.");
+      }
+
       const uploadImg = await uploadRes.json();
+
+      if (!uploadImg.success || !uploadImg.data?.url) {
+        throw new Error("Image upload failed. Invalid response from server.");
+      }
+
       const imageUrl = uploadImg.data.url;
 
       const user = await registerUser(data.email, data.password);
@@ -71,13 +98,12 @@ const Register = () => {
         uid: user.user.uid,
       };
 
-      await registerUserMutation.mutateAsync(profileToSave)
+      await registerUserMutation.mutateAsync(profileToSave);
 
       await axiosSecure.post("/login", { email: data.email });
 
-      refetchProfile()
+      await refetchProfile();
 
-      setShowLoader(false);
       refreshUser();
 
       Swal.fire({
@@ -94,9 +120,11 @@ const Register = () => {
 
       Swal.fire({
         title: "Error",
-        text: err.message,
+        text: err.message || "Registration failed. Please try again.",
         icon: "error",
       });
+    } finally {
+      setShowLoader(false);
     }
   };
   return (
@@ -207,10 +235,34 @@ const Register = () => {
                     <input
                       {...register("image", {
                         required: "Profile Image is Required",
+                        validate: {
+                          fileSize: (files) => {
+                            if (files[0]?.size > 5 * 1024 * 1024) {
+                              return "Image must be less than 5MB";
+                            }
+                            return true;
+                          },
+                          fileType: (files) => {
+                            const allowedTypes = [
+                              "image/jpeg",
+                              "image/jpg",
+                              "image/png",
+                              "image/gif",
+                              "image/webp",
+                            ];
+                            if (
+                              files[0] &&
+                              !allowedTypes.includes(files[0].type)
+                            ) {
+                              return "Only JPEG, PNG, GIF, and WebP images allowed";
+                            }
+                            return true;
+                          },
+                        },
                       })}
                       id="image"
                       type="file"
-                      accept="image/*"
+                      accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
                       className="w-full rounded-xl border border-gray-400 bg-white pl-9 pr-3 py-2.5 text-base text-gray-600 outline-none ring-0 file:hidden cursor-pointer"
                     />
                   </div>
