@@ -17,20 +17,6 @@ const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [dbUser, setDbUser] = useState(null);
 
-  //track User
-  useEffect(() => {
-    const unSub = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
-
-      if (!currentUser) {
-        setDbUser(null);
-      }
-
-      setLoading(false);
-    });
-    return () => unSub();
-  }, []);
-
   useEffect(() => {
     // wake server first
     axiosPublic.get("/health").catch(() => {});
@@ -74,11 +60,11 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-    useEffect(() => {
-      if (user) {
-        refetchProfile();
-      }
-    }, [user]);
+  useEffect(() => {
+    if (user) {
+      refetchProfile();
+    }
+  }, [user]);
 
   // login
   const loginUser = async (email, password) => {
@@ -102,6 +88,20 @@ const AuthProvider = ({ children }) => {
     // return result;
   };
 
+  //track User
+  useEffect(() => {
+    const unSub = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+
+      if (!currentUser) {
+        setDbUser(null);
+      }
+
+      setLoading(false);
+    });
+    return () => unSub();
+  }, []);
+
   const userInfo = {
     user,
     dbUser,
@@ -116,6 +116,6 @@ const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider value={userInfo}>{children}</AuthContext.Provider>
   );
-};;
+};;;
 
 export default AuthProvider;

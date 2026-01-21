@@ -96,7 +96,7 @@ const Banner = () => {
         {/* CTA Buttons */}
         <div className="flex flex-wrap gap-4 mt-8">
           <Link
-            to={roleConfigBtnOne[dbUser?.role]?.route || "/Order"}
+            to={roleConfigBtnOne[dbUser?.role]?.route || "/meals"}
             className="
               px-8 py-3 rounded-xl 
               bg-primary text-white font-semibold
@@ -111,7 +111,7 @@ const Banner = () => {
           </Link>
 
           <Link
-            to={roleConfigBtnTwo[dbUser?.role]?.route || "/favoriteMeal"}
+            to={roleConfigBtnTwo[dbUser?.role]?.route || "/meals"}
             className="
               px-8 py-3 rounded-xl 
               border-2 border-primary text-primary font-semibold
