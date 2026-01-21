@@ -225,21 +225,13 @@ const DashboardLayout = () => {
               className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-5 w-100 border ml-auto p-2 shadow space-y-5"
             >
               <div>
-                {(dbUser?.role === "user" && userMenu) ||
-                  (dbUser?.role === "chef-pending" && userMenu)}
-                {dbUser?.role === "chef" && (
-                  <div className="flex justify-around">
-                    {userMenu}
-                    {chefMenu}
-                  </div>
-                )}
-                {dbUser?.role === "admin" && (
-                  <div className="flex justify-around text-center">
-                    {userMenu}
-                    {chefMenu}
-                    {adminMenu}
-                  </div>
-                )}
+                <div>
+                  {(dbUser?.role === "user" && userMenu) ||
+                    (dbUser?.role === "chef-pending" && userMenu) ||
+                    (dbUser.role === "admin-pending" && userMenu)}
+                  {dbUser?.role === "chef" && chefMenu}
+                  {dbUser?.role === "admin" && adminMenu}
+                </div>
 
                 <div className="sticky top-135 z-50 w-full ">
                   <button
@@ -269,7 +261,7 @@ const DashboardLayout = () => {
           <div>
             {(dbUser?.role === "user" && userMenu) ||
               (dbUser?.role === "chef-pending" && userMenu) ||
-              dbUser.role === "admin-pending" && userMenu}
+              (dbUser.role === "admin-pending" && userMenu)}
             {dbUser?.role === "chef" && chefMenu}
             {dbUser?.role === "admin" && adminMenu}
           </div>
